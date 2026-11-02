@@ -6,6 +6,7 @@ import { div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { spaces, agents, run, updates, window as appWindow } from "herdr";
 import { C, SIGN, caps, two, icon, art, label, clock, menu, onRight, stopPress } from "./kit.js";
+import { openGearMenu } from "./settings.js";
 
 export default class Header {
   init(_p, cx) {
@@ -55,10 +56,10 @@ export default class Header {
       .child(label("Facility Time", C.faint, 10.5))
       .child(div().font_family(SIGN).font_weight(700).text_size(19).text_color(C.ink).child(clock(this.now)));
 
-    // Herdr's Settings (look, machines, alerts, updates, privacy); a dot when an update waits.
+    // The gear's menu: Facility Settings and Herdr's Settings (a dot when an update waits).
     const settings = div().id("settings").relative().p(6).rounded(4).flex_none().cursor_pointer()
-      .tooltip("Facility Settings (Ctrl+,)").hover((s) => s.bg(C.panel2))
-      .on_mouse_down("left", stopPress).on_click(() => run("app.settings"))
+      .tooltip("Settings: facility and Herdr (Ctrl+, opens Herdr's)").hover((s) => s.bg(C.panel2))
+      .on_mouse_down("left", stopPress).on_click(() => openGearMenu())
       .child(icon("settings", 17, C.ink2))
       .when(Boolean(updates()?.app?.ready), (el) => el.child(div().absolute().top(3).right(3).w(7).h(7).rounded(4).bg(C.orange)));
 

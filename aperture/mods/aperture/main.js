@@ -8,6 +8,8 @@
 //   boot           the Boot Protocol dialog
 //   cake           the Cake Protocol window
 //   records        Observation Records (the announcement log)
+//   gear           the header gear's menu: Facility Settings, Herdr Settings
+//   settings       Facility Settings: the layout's own sounds and Cake Protocol switches
 
 import { View, div } from "gpui-kit";
 import { props } from "herdr";
@@ -19,8 +21,9 @@ import Announcements from "./announcements.js";
 import Boot from "./boot.js";
 import Cake from "./cake.js";
 import Records from "./records.js";
+import { GearMenu, FacilitySettings } from "./settings.js";
 
-const ROLES = { header: Header, sidebar: Sidebar, tests: Tests, pane: PaneHeader, announcements: Announcements, boot: Boot, cake: Cake, records: Records };
+const ROLES = { header: Header, sidebar: Sidebar, tests: Tests, pane: PaneHeader, announcements: Announcements, boot: Boot, cake: Cake, records: Records, gear: GearMenu, settings: FacilitySettings };
 
 export default class Aperture extends View {
   init(p, cx) {

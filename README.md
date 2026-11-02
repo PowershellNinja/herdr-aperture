@@ -19,8 +19,9 @@ Observation Records open. Private paths are blurred.
 
 - **Facility frame.** The header carries the Enrichment Center mark, the
   shown Testing Facility as a chamber sign, the current test, live counts
-  (testing, awaiting, complete), the facility clock, Herdr's Settings (the
-  gear, with a dot when an update waits) and window buttons.
+  (testing, awaiting, complete), the facility clock, the settings gear
+  (Facility Settings and Herdr's Settings, with a dot when an update waits)
+  and window buttons.
   Click the facility for the command palette; right-click it for Herdr's
   space menu.
 - **Testing Facilities and Test Subjects.** Spaces are numbered chamber
@@ -118,9 +119,22 @@ Switch to another layout, then delete `layouts/aperture.json` and
 `shared.json` under `aperture.*`. They are harmless, but she would prefer
 you didn't look.
 
+## Facility Settings
+
+The header gear opens **Facility Settings**, the layout's own switches:
+
+- **Facility sounds:** the chime, arrivals, boot, failure buzz and button
+  ticks. Herdr's alert sounds are set in Herdr's Settings.
+- **Cake Protocol:** the cake window for tests completed while you weren't
+  looking. GLaDOS still announces the completion.
+
+Both start on and are kept in Herdr's `shared.json` (`aperture.prefs`).
+Herdr's own Settings window can't be extended by layouts, so these live in
+their own dialog. The same gear also opens Herdr's Settings.
+
 ## Optional extras
 
-**Keys.** The layout's mod takes three commands. Add any you want to `keys.json`:
+**Keys.** The layout's mod takes four commands. Add any you want to `keys.json`:
 
 ```json
 "layout:aperture": {
@@ -129,8 +143,8 @@ you didn't look.
 }
 ```
 
-`aperture.cake` runs a cake drill. All three also work from a shell, e.g.
-`herdr-app do aperture.records`.
+`aperture.settings` opens Facility Settings and `aperture.cake` runs a cake
+drill. All four also work from a shell, e.g. `herdr-app do aperture.records`.
 
 **Themed alert sounds.** Herdr's "agent needs you" and "agent finished"
 sounds come from `settings.json` and apply to every layout. To use the

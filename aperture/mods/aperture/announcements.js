@@ -4,7 +4,7 @@
 // with the last look and only queues what happened; a slow timer publishes
 // the queue (log, sounds, the Cake Protocol), so render has no side effects.
 // It also takes the layout's key commands: aperture.records, aperture.boot,
-// aperture.cake (a drill).
+// aperture.settings, aperture.cake (a drill).
 
 import { div } from "gpui-kit";
 import { h_flex } from "gpui-base";
@@ -14,6 +14,8 @@ import { snapshot, detect, classifyDeparture, announce, wantsCake } from "./even
 import { openRecords, LOG_KEY } from "./records.js";
 import { openBoot } from "./pane.js";
 import { LINES } from "./lexicon.js";
+import { prefs, PREFS_KEY } from "./prefs.js";
+import { openFacilitySettings } from "./settings.js";
 
 const KEEP = 80; // log entries kept in shared state
 export const BOOTING_KEY = "aperture.booting"; // { address: ms } set by the Boot Protocol
@@ -71,7 +73,7 @@ export default class Announcements {
         record({ kind: a.kind, tag: a.tag, text: a.text, address: ev.address });
         if (ev.kind === "online") { setShared(ONLINE_KEY, Date.now()); sfx("online"); }
         else if (SOUND[ev.kind]) sfx(SOUND[ev.kind]);
-        if (wantsCake(ev)) openCake(ev, this.line({ ...ev, kind: "cake" }).text);
+        if (wantsCake(ev) && prefs(shared(PREFS_KEY)).cake) openCake(ev, this.line({ ...ev, kind: "cake" }).text);
       }
     }
     // Give a departed subject's terminal a moment to finish, then ask the core how it ended.
@@ -98,6 +100,7 @@ export default class Announcements {
 
   command(c) {
     if (c === "records") return openRecords();
+    if (c === "settings") return openFacilitySettings();
     if (c === "boot") {
       const p = panes().find((x) => x.focused);
       if (p) openBoot(p.pane, p.terminal, subjectName(p));

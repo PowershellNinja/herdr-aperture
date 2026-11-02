@@ -25,7 +25,9 @@ JetBrains Mono. Signage is Barlow 600–700 in capitals. Palette: panel
      `TESTING FACILITY` and the space name, then `CURRENT TEST` and `TEST nn · name`.
    - On the right, counts with dots: `nn TESTING` (blue), `nn AWAITING`
      (orange, pulsing), `nn COMPLETE` (green), then `FACILITY TIME` with HH:MM,
-     then a 17px gear for `app.settings` (an orange dot when `updates().app.ready`).
+     then a 17px gear (an orange dot when `updates().app.ready`) that opens a
+     250×92 popup: `Facility Settings` (the layout's dialog) and `Herdr Settings`
+     (`app.settings`, `Ctrl+,`).
    - On Windows and Linux, 42px window buttons (close turns red on hover).
      On macOS, 86px left padding for the traffic lights.
 2. **Sidebar, 284px (220–440), panel colour, rule on the right.**
@@ -106,10 +108,16 @@ consoles.
   in (left, 220ms) and the subject plate leaves (left and opacity, 420ms after
   180ms). At 650ms it re-checks that the pane still shows the same terminal,
   sets `aperture.booting[terminal]`, runs `pane.close`, and closes itself.
-- **Sounds** (`playSound`, skipped when `settings().sounds.enabled === false`):
-  `online`, `arrive`, `thunk` (terminated), `fail`, `boot`, and `tick` (Initiate,
-  Resume, Spare).
-- **Keys** to the mod (`nextCommand`, footer copy): `records`, `boot` (focused pane), `cake` (drill).
+- **Sounds** (`playSound`, skipped when `settings().sounds.enabled === false`
+  or Facility sounds is off): `online`, `arrive`, `thunk` (terminated), `fail`,
+  `boot`, and `tick` (Initiate, Resume, Spare).
+- **Facility Settings**: a 460×296 dialog with two switches, `FACILITY SOUNDS`
+  and `CAKE PROTOCOL` (orange when on; the knob slides in 140ms). Clicking a
+  row flips it in shared `aperture.prefs` (`{ sounds, cake }`, both true by
+  default; only booleans count). With Cake Protocol off, a completion is still
+  announced but no cake window opens and nothing is promised.
+- **Keys** to the mod (`nextCommand`, footer copy): `records`, `boot` (focused
+  pane), `settings`, `cake` (drill).
 
 ## Built from
 
@@ -124,9 +132,10 @@ consoles.
     hidden `panel` column with the `panel-body` stack (`files`, `changes`).
   - `footer` block (px 34).
 - **One mod, `mods/aperture`** (`place: none`), roles from `props().role`:
-  `header`, `sidebar`, `tests`, `pane`, `announcements`, `boot`, `cake`, `records`.
+  `header`, `sidebar`, `tests`, `pane`, `announcements`, `boot`, `cake`,
+  `records`, `gear`, `settings`.
   - `kit.js`: palette and helpers.
-  - `events.js`, `lexicon.js`, `names.js` and `order.js`: pure, unit-tested.
+  - `events.js`, `lexicon.js`, `names.js`, `order.js` and `prefs.js`: pure, unit-tested.
   - Session names come from each agent's terminal `title` in `agents()`, with
     leading status glyphs stripped; a title equal to the program name is no name.
     Tabs are named from `panes()` titles, so a shell running `claude attach`
