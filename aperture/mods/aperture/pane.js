@@ -60,7 +60,9 @@ export default class PaneHeader {
           .child(caps(STATUS_WORD[st]))))
       .child(ctl(`sr-${pane}`, "split-right", "Split right (Ctrl+Shift+O)", () => run("pane.split", { direction: "right", pane })))
       .child(ctl(`sd-${pane}`, "split-down", "Split down (Ctrl+Shift+E)", () => run("pane.split", { direction: "down", pane })))
-      .child(ctl(`z-${pane}`, p.zoomed ? "unzoom" : "zoom", p.zoomed ? "Restore (Ctrl+Shift+Z)" : "Zoom (Ctrl+Shift+Z)", () => run("pane.zoom", { pane })))
+      // Zooming a tab's only pane changes nothing, so offer it once the tab is split (or to restore).
+      .when(p.zoomed || panes().filter((x) => x.tab === p.tab).length > 1, (el) => el.child(
+        ctl(`z-${pane}`, p.zoomed ? "unzoom" : "zoom", p.zoomed ? "Restore (Ctrl+Shift+Z)" : "Zoom (Ctrl+Shift+Z)", () => run("pane.zoom", { pane }))))
       .child(boot);
   }
 }
