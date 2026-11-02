@@ -29,8 +29,8 @@ export const C = {
 
 export const SIGN = "Barlow"; // signage face (Barlow Condensed does not register as its own family in Herdr 0.1.12)
 
-export const STATUS_COLOR = { working: C.blue, blocked: C.orange, done: C.green, idle: C.faint, error: C.red };
-export const STATUS_WORD = { working: "TESTING", blocked: "AWAITING INPUT", done: "TEST COMPLETE", idle: "STANDING BY", error: "MALFUNCTION" };
+export const STATUS_COLOR = { working: C.blue, blocked: C.orange, done: C.green, idle: C.faint };
+export const STATUS_WORD = { working: "TESTING", blocked: "AWAITING INPUT", done: "TEST COMPLETE", idle: "STANDING BY" };
 
 export const caps = (s) => String(s ?? "").toUpperCase();
 export const two = (n) => String(n).padStart(2, "0");

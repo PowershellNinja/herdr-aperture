@@ -22,9 +22,10 @@ export function snapshot(agents) {
 
 /**
  * Events between two snapshots. The first look (prev null) is a baseline,
- * not news. Kinds: arrived, blocked, failed (the core's `error` status),
- * completed (unseen: Herdr's "done", it finished while nobody looked),
- * departed (classified later).
+ * not news. Kinds: arrived, blocked, completed (unseen: Herdr's "done", it
+ * finished while nobody looked), departed (classified later). The core's
+ * `error` status reaches mods as "blocked" (Herdr 0.1.12), so a failure is
+ * only known from the exit code once the subject departs.
  */
 export function detect(prev, next) {
   if (!prev) return [];
@@ -34,7 +35,6 @@ export function detect(prev, next) {
     const ev = { address, name: n.name, facility: n.facility, test: n.test, status: n.status };
     if (!p) out.push({ kind: "arrived", ...ev });
     else if (n.status === "blocked" && p.status !== "blocked") out.push({ kind: "blocked", ...ev });
-    else if (n.status === "error" && p.status !== "error") out.push({ kind: "failed", ...ev });
     else if (p.status === "working" && (n.status === "done" || n.status === "idle")) out.push({ kind: "completed", unseen: n.status === "done", ...ev });
   }
   for (const [address, p] of Object.entries(prev)) {

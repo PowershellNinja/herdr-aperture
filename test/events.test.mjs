@@ -41,12 +41,6 @@ test("being looked at after finishing is not a second completion", () => {
   assert.deepEqual(detect(snapshot([agent("t1", "idle")]), snapshot([agent("t1", "working")])), []);
 });
 
-test("a subject reporting an error fails its test once", () => {
-  const error = snapshot([agent("t1", "error")]);
-  assert.deepEqual(kinds(detect(snapshot([agent("t1", "working")]), error)), ["failed:t1"]);
-  assert.deepEqual(detect(error, error), []);
-});
-
 test("a subject that disappears departs, with what we knew about it", () => {
   const [ev] = detect(snapshot([agent("t1", "working")]), snapshot([]));
   assert.equal(ev.kind, "departed");

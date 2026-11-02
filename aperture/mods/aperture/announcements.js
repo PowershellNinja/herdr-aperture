@@ -30,6 +30,7 @@ export function record(entry) {
 export function openCake(ev, line) {
   const cakes = shared(CAKES_KEY) ?? { promised: 0, delivered: 0 };
   setShared(CAKES_KEY, { ...cakes, promised: (cakes.promised ?? 0) + 1 });
+  record({ kind: "cake", tag: "CAKE PROTOCOL", text: line, address: ev.address });
   openOverlay({ mod: "aperture", kind: "window", key: "aperture-cake", frame: "none", width: 400, height: 268,
     props: { role: "cake", name: ev.name, facility: ev.facility, test: ev.test, address: ev.address, line } });
 }
