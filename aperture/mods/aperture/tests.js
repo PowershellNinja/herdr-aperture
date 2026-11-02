@@ -6,7 +6,7 @@
 import { div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { spaces, run } from "herdr";
-import { C, SIGN, caps, two, icon, menu, newMenu, onRight, STATUS_COLOR } from "./kit.js";
+import { C, SIGN, caps, two, icon, menu, newMenu, onRight, sfx, STATUS_COLOR } from "./kit.js";
 
 export default class Tests {
   render() {
@@ -33,14 +33,14 @@ export default class Tests {
     const initiate = h_flex().id("initiate").h_full().flex_none().px(14).gap(7).items_center().cursor_pointer()
       .bg(C.orange).text_color(C.ink).hover((x) => x.opacity(0.85))
       .tooltip("Initiate Testing: a shell or a test subject (Ctrl+Shift+T for a shell)")
-      .on_click(() => newMenu())
+      .on_click(() => { sfx("tick"); newMenu(); })
       .child(icon("plus", 13, C.ink))
       .child(div().font_family(SIGN).font_weight(700).text_size(13).child("INITIATE TESTING"));
 
     const resume = (t) => h_flex().id(`resume-${t.id}`).h_full().flex_none().px(10).gap(6).items_center().cursor_pointer()
       .border(1).border_color(C.rule).text_color(C.ink2).hover((x) => x.bg("#ffffff"))
       .tooltip(`Resume Experiment: bring test ${two(t.index)} back`)
-      .on_click(() => { run("tab.unsettle", { id: t.id }); run("tab.select", { id: t.id }); })
+      .on_click(() => { sfx("tick"); run("tab.unsettle", { id: t.id }); run("tab.select", { id: t.id }); })
       .on_mouse_down("right", onRight(() => menu("tab", { id: t.id, space: space.id })))
       .child(icon("resume", 11, C.ink2))
       .child(div().font_family(SIGN).font_weight(700).text_size(12).child(`RESUME EXPERIMENT · ${caps(t.named ? t.name : "Test " + two(t.index))}`));

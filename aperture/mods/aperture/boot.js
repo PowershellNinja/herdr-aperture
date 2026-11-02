@@ -36,6 +36,7 @@ export default class Boot {
 
   spare() {
     const p = props() ?? {};
+    sfx("tick");
     if (p.terminal) {
       const a = announce({ kind: "spared", name: p.name }, Math.floor(Math.random() * LINES.spared.length));
       record({ kind: a.kind, tag: a.tag, text: a.text, address: p.terminal });
