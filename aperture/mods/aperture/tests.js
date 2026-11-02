@@ -5,18 +5,21 @@
 
 import { div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
-import { spaces, run } from "herdr";
+import { spaces, agents, run } from "herdr";
 import { C, SIGN, caps, two, icon, menu, newMenu, onRight, sfx, STATUS_COLOR } from "./kit.js";
+import { testName } from "./names.js";
 
 export default class Tests {
   render() {
     const space = spaces().find((s) => s.active);
+    const subjects = agents();
     const tabs = space?.tabs ?? [];
     const open = tabs.filter((t) => !t.settled);
     const suspended = tabs.filter((t) => t.settled);
 
     const chip = (t) => {
       const color = STATUS_COLOR[t.status];
+      const name = testName(t, subjects);
       return v_flex().id(`test-${t.id}`).h_full().flex_none().cursor_pointer()
         .bg(t.active ? "#ffffff" : C.panel2).border(1).border_color(t.active ? C.ink2 : C.rule)
         .hover((x) => x.bg("#ffffff"))
@@ -26,7 +29,7 @@ export default class Tests {
         .child(div().w_full().h(3).flex_none().bg(t.active ? C.orange : color ?? C.panel2))
         .child(h_flex().flex_1().px(12).gap(8).items_center()
           .child(div().font_family(SIGN).font_weight(700).text_size(13).text_color(t.active ? C.ink : C.ink2).child(`TEST ${two(t.index)}`))
-          .when(t.named, (el) => el.child(div().max_w(180).truncate().text_size(13).text_color(t.active ? C.ink : C.ink2).child(t.name)))
+          .when(Boolean(name), (el) => el.child(div().max_w(220).truncate().text_size(13).text_color(t.active ? C.ink : C.ink2).child(name)))
           .when(Boolean(color), (el) => el.child(div().w(8).h(8).rounded(4).bg(color))));
     };
 
@@ -43,7 +46,7 @@ export default class Tests {
       .on_click(() => { sfx("tick"); run("tab.unsettle", { id: t.id }); run("tab.select", { id: t.id }); })
       .on_mouse_down("right", onRight(() => menu("tab", { id: t.id, space: space.id })))
       .child(icon("resume", 11, C.ink2))
-      .child(div().font_family(SIGN).font_weight(700).text_size(12).child(`RESUME EXPERIMENT · ${caps(t.named ? t.name : "Test " + two(t.index))}`));
+      .child(div().font_family(SIGN).font_weight(700).text_size(12).child(`RESUME EXPERIMENT · ${caps(testName(t, subjects) ?? "Test " + two(t.index))}`));
 
     return h_flex().id("tests").size_full().gap(6).items_center()
       .on_mouse_down("right", onRight(() => menu("global", {})))

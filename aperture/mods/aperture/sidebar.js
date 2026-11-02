@@ -9,6 +9,7 @@ import {
   C, SIGN, caps, two, icon, art, label, programIcon, menu, onRight, STATUS_COLOR, STATUS_WORD,
 } from "./kit.js";
 import { openRecords, LOG_KEY } from "./records.js";
+import { sessionName } from "./names.js";
 
 const IDLE_LINE = "All test subjects are accounted for. That is not the same as all test subjects being useful.";
 
@@ -50,6 +51,8 @@ export default class Sidebar {
 
     const subject = (a) => {
       const color = STATUS_COLOR[a.status] ?? C.faint;
+      const program = a.program?.name ?? a.app ?? "Subject";
+      const session = sessionName(a);
       return h_flex().id(`sub-${a.address}`).w_full().h(46).flex_none().pr(12).gap(10).items_center().cursor_pointer()
         .bg(a.focused ? "#ffffff" : C.panel).hover((x) => x.bg(a.focused ? "#ffffff" : C.panel2))
         .border_b(1).border_color(C.panel2)
@@ -61,8 +64,8 @@ export default class Sidebar {
           .bg(a.program?.tile ?? C.ink).child(programIcon(a.program, 16, "#ffffff")))
         .child(v_flex().flex_1().min_w(0)
           .child(div().truncate().font_weight(600).text_size(13.5).text_color(C.ink)
-            .child(a.program?.name ?? a.app ?? "Subject"))
-          .child(label(`Test ${two(a.tab_index)} · ${a.space_name}`, C.faint, 10.5).truncate()))
+            .child(session ?? program))
+          .child(label(`${session ? program + " · " : ""}Test ${two(a.tab_index)} · ${a.space_name}`, C.faint, 10.5).truncate()))
         .child(div().flex_none().font_family(SIGN).font_weight(700).text_size(10.5).text_color(color)
           .when(a.status === "blocked", (d) => d.loop("opacity", { from: 0.4, to: 1, period: 900 }))
           .child(caps(STATUS_WORD[a.status] ?? a.status)));
