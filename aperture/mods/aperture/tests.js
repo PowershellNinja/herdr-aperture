@@ -1,13 +1,23 @@
 // The tests bar: the shown facility's tests (tabs) as chamber tabs, coloured
 // by their subjects' status, then Initiate Testing (Herdr's + menu: a shell
 // or any installed agent). Suspended (settled) tests sit at the right with
-// Resume Experiment. Right-click a test for Herdr's tab menu.
+// Resume Experiment. FILES and CHANGES open Herdr's own panels beside the
+// terminals. Right-click a test for Herdr's tab menu.
 
 import { div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
-import { spaces, agents, run } from "herdr";
+import { spaces, agents, run, layout, shared } from "herdr";
 import { C, SIGN, caps, two, icon, menu, newMenu, onRight, sfx, STATUS_COLOR } from "./kit.js";
 import { testName } from "./names.js";
+
+function find(node, id) {
+  if (node?.id === id) return node;
+  for (const child of node?.children ?? []) {
+    const found = find(child, id);
+    if (found) return found;
+  }
+  return null;
+}
 
 export default class Tests {
   render() {
@@ -48,11 +58,31 @@ export default class Tests {
       .child(icon("resume", 11, C.ink2))
       .child(div().font_family(SIGN).font_weight(700).text_size(12).child(`RESUME EXPERIMENT · ${caps(testName(t, subjects) ?? "Test " + two(t.index))}`));
 
+    // Herdr's Files and Changes panels (the layout's "panel" stack), toggled as Herdr's own tab bar does.
+    const panel = find(layout(), "panel");
+    const body = find(layout(), "panel-body");
+    const enabled = shared("workspace.panels") ?? ["files", "changes"];
+    const panelButton = (id, text, ic) => {
+      const on = Boolean(panel && !panel.hidden && body?.active === id);
+      return h_flex().id(`panel-${id}`).h_full().flex_none().px(10).gap(6).items_center().cursor_pointer()
+        .bg(on ? C.ink : C.panel2).border(1).border_color(on ? C.ink : C.rule)
+        .hover((x) => x.bg(on ? C.ink2 : "#ffffff"))
+        .tooltip(on ? `Close ${text.toLowerCase()}` : `Show ${text.toLowerCase()} for this facility`)
+        .on_click(() => {
+          if (on) run("layout.hide", { id: "panel" });
+          else { run("layout.select", { stack: "panel-body", child: id }); run("layout.show", { id: "panel" }); }
+        })
+        .child(icon(ic, 13, on ? C.panel : C.ink2))
+        .child(div().font_family(SIGN).font_weight(700).text_size(12).text_color(on ? C.panel : C.ink2).child(text));
+    };
+
     return h_flex().id("tests").size_full().gap(6).items_center()
       .on_mouse_down("right", onRight(() => menu("global", {})))
       .child(h_flex().id("tests-open").h_full().flex_1().min_w(0).gap(6).items_center().overflow_x_scrollbar()
         .children(open.map(chip))
         .child(initiate))
-      .children(suspended.map(resume));
+      .children(suspended.map(resume))
+      .when(Boolean(panel) && enabled.includes("files"), (el) => el.child(panelButton("files", "FILES", "files")))
+      .when(Boolean(panel) && enabled.includes("changes"), (el) => el.child(panelButton("changes", "CHANGES", "changes")));
   }
 }

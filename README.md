@@ -19,7 +19,8 @@ Observation Records open. Private paths are blurred.
 
 - **Facility frame.** The header carries the Enrichment Center mark, the
   shown Testing Facility as a chamber sign, the current test, live counts
-  (testing, awaiting, complete), the facility clock and window buttons.
+  (testing, awaiting, complete), the facility clock, Herdr's Settings (the
+  gear, with a dot when an update waits) and window buttons.
   Click the facility for the command palette; right-click it for Herdr's
   space menu.
 - **Testing Facilities and Test Subjects.** Spaces are numbered chamber
@@ -29,9 +30,10 @@ Observation Records open. Private paths are blurred.
 - **Tests bar.** Tabs are chamber tabs coloured by status, named after their
   session unless you named the tab yourself. **Initiate
   Testing** opens Herdr's own + menu: a shell or any installed agent. Settled
-  tabs wait at the right as **Resume Experiment**.
+  tabs wait at the right as **Resume Experiment**. **FILES** and **CHANGES**
+  open Herdr's own Files and Changes panels beside the terminals.
 - **Observation feeds.** Every pane gets a header with the subject, its
-  folder, its status, split, zoom and **BOOT**.
+  folder, its status, split, zoom (once the test is split) and **BOOT**.
 - **GLaDOS.** A monitor in the sidebar holds a breathing optic (faster when
   someone is waiting) and the latest Facility Announcement. Original lines
   react to real events: a subject arriving, waiting for input, completing,
