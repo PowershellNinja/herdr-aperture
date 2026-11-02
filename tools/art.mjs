@@ -26,6 +26,7 @@ const ICONS = {
   subject: tinted(`<circle cx="8" cy="6" r="2.4"/><path d="M3.5 13.5c.6-2.6 2.4-4 4.5-4s3.9 1.4 4.5 4"/>`),
   records: tinted(`<rect x="3" y="2" width="10" height="12" rx="1"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3"/>`),
   resume: tinted(`<path d="M5 3.5v9l7-4.5z"/>`),
+  speaker: tinted(`<path d="M2.5 6v4h2.5l3.5 3V3L5 6z"/><path d="M10.5 5.5c.8.7 1.2 1.6 1.2 2.5s-.4 1.8-1.2 2.5M12.3 3.8c1.3 1.1 2 2.6 2 4.2s-.7 3.1-2 4.2"/>`),
   facility: tinted(`<rect x="2.5" y="2.5" width="11" height="11"/><path d="M2.5 6.5h11M6.5 6.5v7"/>`),
   boot: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1.5h4.2l.3 6.3 4.6 1.7c1 .4 1.6 1.2 1.6 2.2V13H1.6v-1.2c0-.6.4-1 .9-1.1l1-.2z"/><rect x="1.6" y="13.6" width="12.8" height="1.4" rx=".4"/></svg>`,
 };

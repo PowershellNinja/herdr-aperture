@@ -4,7 +4,7 @@
   "type": "module",
   "description": "An Aperture Science Enrichment Center layout for the Herdr app",
   "scripts": {
-    "test": "node --test test/",
+    "test": "node --test \"test/*.test.mjs\"",
     "install-layout": "node tools/install.mjs",
     "sounds": "node tools/sounds.mjs"
   }
