@@ -43,7 +43,7 @@ export default class Sidebar {
         .child(v_flex().flex_1().min_w(0)
           .child(div().truncate().font_weight(600).text_size(14).text_color(C.ink).child(s.name))
           .child(label(`${two(tests)} ${tests === 1 ? "test" : "tests"}${s.machine ? " · " + s.machine : ""}${st ? " · " + STATUS_WORD[st] : ""}`,
-            st === "blocked" ? C.orange : C.faint, 10.5)))
+            st === "blocked" ? C.orange : C.faint, 10.5).truncate()))
         .when(Boolean(st && st !== "idle"), (el) => el.child(div().w(8).h(8).rounded(4).flex_none().bg(STATUS_COLOR[st])
           .when(st === "blocked", (d) => d.loop("opacity", { from: 0.3, to: 1, period: 800 }))));
     };
@@ -62,7 +62,7 @@ export default class Sidebar {
         .child(v_flex().flex_1().min_w(0)
           .child(div().truncate().font_weight(600).text_size(13.5).text_color(C.ink)
             .child(a.program?.name ?? a.app ?? "Subject"))
-          .child(label(`Test ${two(a.tab_index)} · ${a.space_name}`, C.faint, 10.5)))
+          .child(label(`Test ${two(a.tab_index)} · ${a.space_name}`, C.faint, 10.5).truncate()))
         .child(div().flex_none().font_family(SIGN).font_weight(700).text_size(10.5).text_color(color)
           .when(a.status === "blocked", (d) => d.loop("opacity", { from: 0.4, to: 1, period: 900 }))
           .child(caps(STATUS_WORD[a.status] ?? a.status)));
