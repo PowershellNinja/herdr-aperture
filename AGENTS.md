@@ -14,7 +14,7 @@ An Aperture Science / GLaDOS layout for the Herdr desktop app.
 - `aperture/` is the community-layout folder: `layouts/aperture.json`,
   `mods/aperture/`, `RECIPE.md`, `preview.png`.
 - One mod, many roles (`props().role`), like Herdr 98 and LCARS.
-- `events.js` and `lexicon.js` are pure: no `herdr` / `gpui-kit` imports, so
+- `events.js`, `lexicon.js` and `names.js` are pure: no `herdr` / `gpui-kit` imports, so
   `node --test` can run them.
 - All art, sounds and dialogue are original. Fonts are OFL (Barlow).
   No Valve logos, audio or quoted game lines.

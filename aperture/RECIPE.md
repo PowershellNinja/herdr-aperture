@@ -32,13 +32,15 @@ JetBrains Mono. Signage is Barlow 600–700 in capitals. Palette: panel
    - Rows of 48px: a 4px orange bar when shown, a 32px number square (black
      when shown), the name, then `nn TESTS · status` (orange when blocked) and a status dot.
    - `TEST SUBJECTS` with a count, then rows of 46px: a 4px status bar, the
-     program tile and icon, the program name, `TEST nn · space`, and the status
+     program tile and icon, the session name (else the program name),
+     `PROGRAM · TEST nn · space` (the program only when a session name shows), and the status
      word at the right (`TESTING`, `AWAITING INPUT`, `TEST COMPLETE`, `STANDING BY`).
    - The GLaDOS monitor at the bottom: console colour with a 3px orange top
      border, a 46px optic, `GLaDOS` / `FACILITY OVERSEER · ONLINE`, the
      latest announcement, and `OBSERVATION RECORDS` with the entry count.
 3. **Work area, padding 10/12, gap 8.**
-   - Tests bar, 38px: chips `TEST nn` plus the tab's name when it has one,
+   - Tests bar, 38px: chips `TEST nn` plus a name: the tab's own when someone
+     named it, else its (focused, else first) agent's session name,
      with a 3px top bar (orange when shown, else the status colour) and a
      status dot. Then an orange `+ INITIATE TESTING` button. Settled tabs show
      at the right as `▶ RESUME EXPERIMENT · name`.
@@ -111,7 +113,9 @@ consoles.
 - **One mod, `mods/aperture`** (`place: none`), roles from `props().role`:
   `header`, `sidebar`, `tests`, `pane`, `announcements`, `boot`, `cake`, `records`.
   - `kit.js`: palette and helpers.
-  - `events.js` and `lexicon.js`: pure, unit-tested.
+  - `events.js`, `lexicon.js` and `names.js`: pure, unit-tested.
+  - Session names come from each agent's terminal `title` in `agents()`, with
+    leading status glyphs stripped; a title equal to the program name is no name.
 - **herdr functions:** spaces, agents, panes, run, setAgentOrder, shared,
   setShared, hc, nextCommand, openOverlay, closeOverlay, playSound,
   settings, window, props, home.

@@ -23,9 +23,11 @@ Observation Records open. Private paths are blurred.
   Click the facility for the command palette; right-click it for Herdr's
   space menu.
 - **Testing Facilities and Test Subjects.** Spaces are numbered chamber
-  signs. Agents are listed with their test status, and a subject waiting for
-  you pulses orange.
-- **Tests bar.** Tabs are chamber tabs coloured by status. **Initiate
+  signs. Agents are listed by their session name (Claude Code's conversation
+  title, else the program) with their test status, and a subject waiting
+  for you pulses orange.
+- **Tests bar.** Tabs are chamber tabs coloured by status, named after their
+  session unless you named the tab yourself. **Initiate
   Testing** opens Herdr's own + menu: a shell or any installed agent. Settled
   tabs wait at the right as **Resume Experiment**.
 - **Observation feeds.** Every pane gets a header with the subject, its
