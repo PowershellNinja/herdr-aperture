@@ -6,7 +6,7 @@
 
 import { div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
-import { spaces, agents, run, layout, shared } from "herdr";
+import { spaces, panes, run, layout, shared } from "herdr";
 import { C, SIGN, caps, two, icon, menu, newMenu, onRight, sfx, STATUS_COLOR } from "./kit.js";
 import { testName } from "./names.js";
 
@@ -22,14 +22,14 @@ function find(node, id) {
 export default class Tests {
   render() {
     const space = spaces().find((s) => s.active);
-    const subjects = agents();
+    const all = panes(); // tabs are named from their panes' titles (names.js)
     const tabs = space?.tabs ?? [];
     const open = tabs.filter((t) => !t.settled);
     const suspended = tabs.filter((t) => t.settled);
 
     const chip = (t) => {
       const color = STATUS_COLOR[t.status];
-      const name = testName(t, subjects);
+      const name = testName(t, all);
       return v_flex().id(`test-${t.id}`).h_full().flex_none().cursor_pointer()
         .bg(t.active ? "#ffffff" : C.panel2).border(1).border_color(t.active ? C.ink2 : C.rule)
         .hover((x) => x.bg("#ffffff"))
@@ -56,7 +56,7 @@ export default class Tests {
       .on_click(() => { sfx("tick"); run("tab.unsettle", { id: t.id }); run("tab.select", { id: t.id }); })
       .on_mouse_down("right", onRight(() => menu("tab", { id: t.id, space: space.id })))
       .child(icon("resume", 11, C.ink2))
-      .child(div().font_family(SIGN).font_weight(700).text_size(12).child(`RESUME EXPERIMENT · ${caps(testName(t, subjects) ?? "Test " + two(t.index))}`));
+      .child(div().font_family(SIGN).font_weight(700).text_size(12).child(`RESUME EXPERIMENT · ${caps(testName(t, all) ?? "Test " + two(t.index))}`));
 
     // Herdr's Files and Changes panels (the layout's "panel" stack), toggled as Herdr's own tab bar does.
     const panel = find(layout(), "panel");

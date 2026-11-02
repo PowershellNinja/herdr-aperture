@@ -25,25 +25,46 @@ test("a title that says nothing about the session is no name", () => {
   assert.equal(sessionName(claude(undefined)), null);
 });
 
+// Tabs are named from their panes (panes() entries: pane, terminal, tab, title, focused, program).
+const tab = { id: "tb2", name: "2", named: false };
+const agentPane = (title, extra = {}) => ({ pane: "p1", terminal: "t1", tab: "tb2", title, focused: false, program: { name: "Claude Code", agent: true }, ...extra });
+const shellPane = (title, extra = {}) => ({ pane: "p2", terminal: "t1c", tab: "tb2", title, focused: false, program: { name: "pwsh", agent: false, shell: true }, ...extra });
+
 test("an unnamed tab is called after its subject's session", () => {
-  const tab = { id: "tb2", name: "2", named: false };
-  assert.equal(testName(tab, [claude("Echoes Lyra Origin Story")]), "Echoes Lyra Origin Story");
+  assert.equal(testName(tab, [agentPane("Echoes Lyra Origin Story")]), "Echoes Lyra Origin Story");
 });
 
 test("a tab someone named keeps that name", () => {
-  const tab = { id: "tb2", name: "Herdr Aperture", named: true };
-  assert.equal(testName(tab, [claude("Echoes Lyra Origin Story")]), "Herdr Aperture");
+  assert.equal(testName({ ...tab, name: "Herdr Aperture", named: true }, [agentPane("Echoes Lyra Origin Story")]), "Herdr Aperture");
 });
 
-test("an unnamed tab without a named session has no name", () => {
-  const tab = { id: "tb2", name: "2", named: false };
+test("an unnamed tab without a meaningful title has no name", () => {
   assert.equal(testName(tab, []), null);
-  assert.equal(testName(tab, [claude("Claude Code")]), null);
-  assert.equal(testName(tab, [claude("Elsewhere", { tab: "tb9" })]), null);
+  assert.equal(testName(tab, [agentPane("Claude Code")]), null);
+  assert.equal(testName(tab, [agentPane("Elsewhere", { tab: "tb9" })]), null);
 });
 
-test("with several subjects in a tab, the focused one names it", () => {
-  const tab = { id: "tb2", name: "2", named: false };
-  const subjects = [claude("First session"), claude("Focused session", { address: "t2", focused: true })];
-  assert.equal(testName(tab, subjects), "Focused session");
+test("with several panes in a tab, the focused one names it", () => {
+  const panes = [agentPane("First session"), agentPane("Focused session", { pane: "p3", terminal: "t2", focused: true })];
+  assert.equal(testName(tab, panes), "Focused session");
+});
+
+test("a shell showing a session (an attached background agent) names its tab", () => {
+  assert.equal(testName(tab, [shellPane("✳ ContextForge to Agentgateway migration")]), "ContextForge to Agentgateway migration");
+});
+
+test("a shell's own address, folder or program name does not name a tab", () => {
+  assert.equal(testName(tab, [shellPane("t1c")]), null);
+  assert.equal(testName(tab, [shellPane("C:\\Users\\me\\repo")]), null);
+  assert.equal(testName(tab, [shellPane("~/repo")]), null);
+  assert.equal(testName(tab, [shellPane("/home/me/repo")]), null);
+  assert.equal(testName(tab, [shellPane("pwsh")]), null);
+});
+
+test("a mod pane's title is its mod, not a name", () => {
+  assert.equal(testName(tab, [{ pane: "p4", terminal: null, mod: "files", tab: "tb2", title: "Files", focused: true }]), null);
+});
+
+test("an agent's session wins over another pane's title when neither is focused", () => {
+  assert.equal(testName(tab, [shellPane("vim notes.md"), agentPane("Agent session")]), "Agent session");
 });

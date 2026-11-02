@@ -41,7 +41,9 @@ JetBrains Mono. Signage is Barlow 600–700 in capitals. Palette: panel
      latest announcement, and `OBSERVATION RECORDS` with the entry count.
 3. **Work area, padding 10/12, gap 8.**
    - Tests bar, 38px: chips `TEST nn` plus a name: the tab's own when someone
-     named it, else its (focused, else first) agent's session name,
+     named it, else a pane title that names something (the focused pane's,
+     else an agent's, else any): an agent's session name, or a title a
+     program set in a shell, but not the shell's folder, address or program name,
      with a 3px top bar (orange when shown, else the status colour) and a
      status dot. Then an orange `+ INITIATE TESTING` button. Settled tabs show
      at the right as `▶ RESUME EXPERIMENT · name`, then `FILES` and `CHANGES`
@@ -125,6 +127,9 @@ consoles.
   - `events.js`, `lexicon.js` and `names.js`: pure, unit-tested.
   - Session names come from each agent's terminal `title` in `agents()`, with
     leading status glyphs stripped; a title equal to the program name is no name.
+    Tabs are named from `panes()` titles, so a shell running `claude attach`
+    (no agent status, Herdr sees pwsh) still names its tab; Test Subjects stay
+    agents only, since only they have a status.
 - **herdr functions:** spaces, agents, panes, run, setAgentOrder, shared,
   setShared, hc, nextCommand, openOverlay, closeOverlay, playSound,
   settings, window, props, home.

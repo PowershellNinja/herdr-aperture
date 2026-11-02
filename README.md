@@ -28,7 +28,9 @@ Observation Records open. Private paths are blurred.
   title, else the program) with their test status, and a subject waiting
   for you pulses orange.
 - **Tests bar.** Tabs are chamber tabs coloured by status, named after their
-  session unless you named the tab yourself. **Initiate
+  session unless you named the tab yourself. A plain shell whose title a
+  program set (e.g. `claude attach` showing a background session) names its
+  tab too; a shell's own folder or address never does. **Initiate
   Testing** opens Herdr's own + menu: a shell or any installed agent. Settled
   tabs wait at the right as **Resume Experiment**. **FILES** and **CHANGES**
   open Herdr's own Files and Changes panels beside the terminals.
