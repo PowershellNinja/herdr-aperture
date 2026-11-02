@@ -1,30 +1,57 @@
-# Aperture Science Enrichment Center for Herdr
+# Aperture Science for Herdr
 
-A layout for the [Herdr](https://herdr.dev) desktop app that turns it into an
-Enrichment Center monitoring terminal. Light facility panels and chamber
-signage frame dark monitoring consoles. A facility overseer comments on what
-your agents do, in a tone that is mostly professional.
-
-![Aperture layout](aperture/preview.png)
+An Enrichment Center monitoring terminal around your terminals, for the
+[Herdr](https://herdr.dev) app. Clean facility panels and chamber signage
+frame dark monitoring consoles, and a facility overseer comments on
+everything your agents do, in a tone that is mostly professional.
 
 *"Thank you for participating in this test. Your continued usefulness is being evaluated."*
 
-> Unofficial fan work. Not affiliated with or endorsed by Valve. All art,
-> sounds and dialogue are original; the fonts are Barlow (SIL OFL 1.1).
+![Aperture Science for Herdr](aperture/preview.png)
 
-## Install
+A real Herdr window: Claude Code running Test Chamber 07, with the
+Observation Records open. Private paths are blurred.
 
-Needs Herdr app 0.1.12 or later and Node 18+.
+> Unofficial fan work, not affiliated with or endorsed by Valve. All art,
+> sounds and dialogue are original. The fonts are Barlow (SIL OFL 1.1).
 
-```sh
-node tools/install.mjs          # copies layouts/aperture.json and mods/aperture/ into ~/.config/herdr-app
-herdr-app check ~/.config/herdr-app/mods/aperture
-herdr-app do layout.switch --name aperture
-```
+## Features
 
-`HERDR_APP_HOME` overrides the target folder. The installer only writes
-`layouts/aperture.json` and `mods/aperture/`. `Ctrl+Shift+L` cycles back to
-your other layouts. Delete those two paths to uninstall.
+- **Facility frame.** The header carries the Enrichment Center mark, the
+  shown Testing Facility as a chamber sign, the current test, live counts
+  (testing, awaiting, complete), the facility clock and window buttons.
+  Click the facility for the command palette; right-click it for Herdr's
+  space menu.
+- **Testing Facilities and Test Subjects.** Spaces are numbered chamber
+  signs. Agents are listed with their test status, and a subject waiting for
+  you pulses orange.
+- **Tests bar.** Tabs are chamber tabs coloured by status. **Initiate
+  Testing** opens Herdr's own + menu: a shell or any installed agent. Settled
+  tabs wait at the right as **Resume Experiment**.
+- **Observation feeds.** Every pane gets a header with the subject, its
+  folder, its status, split, zoom and **BOOT**.
+- **GLaDOS.** A monitor in the sidebar holds a breathing optic (faster when
+  someone is waiting) and the latest Facility Announcement. Original lines
+  react to real events: a subject arriving, waiting for input, completing,
+  failing, leaving, or being ended without the proper paperwork.
+  > *"Claude Code is blocked. Not by a wall. By you."*
+  > *"Test 02 complete. Codex performed adequately. That is the highest grade I am authorized to give."*
+  > *"Claude Code crashed. I'd say it isn't your fault, but I've read the output."*
+
+  The last 80 lines are kept as **Observation Records**.
+- **Cake Protocol.** When a test completes while you weren't looking, a cake
+  window appears, searches for the cake, and reports a delivery status. The
+  status is never "delivered". The bottom strip keeps the ledger: cakes
+  promised, cakes delivered (00).
+- **Boot Protocol.** BOOT asks first: Enter administers, Esc spares the
+  subject. Then the boot swings, the subject's plate leaves, and that pane
+  closes, ending its terminal. Nothing else is touched.
+- **Sounds.** A facility chime, subject arrival, a relay thunk, a failure
+  buzz, the boot's thud and a faint UI tick. All are synthesized, no louder
+  than Herdr's own alerts, and silent when Herdr's sounds are off.
+
+Every button runs a real Herdr command or opens Herdr's own menus. Your
+keys, menus, splits and worktrees work as before.
 
 ## Terminology
 
@@ -39,44 +66,54 @@ your other layouts. Delete those two paths to uninstall.
 | Log | Observation Records |
 | Notifications | Facility Announcements |
 
-## What it does
+## Install
 
-- **Facility header.** The mark, the shown Testing Facility as a chamber
-  sign, the current test, live counts (testing / awaiting / complete), the
-  facility clock and window buttons. Click the facility for the palette;
-  right-click it for Herdr's space menu.
-- **Sidebar.** Testing Facilities and Test Subjects with status. A blocked
-  subject pulses orange. Below them sits the GLaDOS monitor: an optic that
-  breathes faster when someone is waiting, the latest announcement, and the
-  Observation Records.
-- **Tests bar.** Chamber tabs coloured by status, **Initiate Testing**
-  (Herdr's own + menu: a shell or any installed agent), and **Resume
-  Experiment** chips for settled tabs.
-- **Observation feed headers** on every pane: subject, folder, status, split,
-  zoom and **BOOT**.
-- **Facility Announcements.** Original GLaDOS lines for: facility online,
-  subject acquired, awaiting input, test complete, subject departed, test
-  failed (non-zero exit), terminated outside protocol (closed without the
-  Boot Protocol), boot administered and boot cancelled. The latest line
-  shows in the bottom strip and the monitor. The last 80 lines are kept as
-  Observation Records.
-- **Cake Protocol.** When a test completes while you weren't looking
-  (Herdr's `done`), a cake window appears, searches for the cake, and reports
-  a delivery status that is never "delivered". The ledger in the bottom
-  strip keeps count.
-- **Boot Protocol.** BOOT on a pane header asks first (Enter administers,
-  Esc spares). It then plays the kick and closes that pane, which ends its
-  terminal; nothing else is touched. Sparing the subject is logged too.
-- **Sounds.** A facility chime, subject arrival, relay thunk, failure buzz,
-  boot thud and a faint UI tick. All are synthesized (`tools/sounds.mjs`),
-  no louder than Herdr's own alerts, and silent when Herdr's sounds are off.
+### With your agent
 
-Every action runs a Herdr command or opens Herdr's own menus, so rename,
-close, split, worktrees and all keys in `keys.json` work as before.
+In a Herdr terminal, ask your coding agent:
 
-### Optional keys
+```text
+Add the layout herdr.dev/layouts/PowershellNinja/herdr-aperture
+```
 
-The layout's mod takes three commands. Add them to `keys.json` if you want them:
+The agent reads `aperture/RECIPE.md`, copies the layout and its mod into
+`~/.config/herdr-app` and switches to it.
+
+### Manually
+
+You need the Herdr app and Node 18 or later.
+
+```sh
+git clone https://github.com/PowershellNinja/herdr-aperture
+cd herdr-aperture
+node tools/install.mjs
+herdr-app check ~/.config/herdr-app/mods/aperture
+herdr-app do layout.switch --name aperture
+```
+
+`tools/install.mjs` writes only `layouts/aperture.json` and `mods/aperture/`
+in `${HERDR_APP_HOME:-~/.config/herdr-app}`. `Ctrl+Shift+L` cycles back to
+your other layouts.
+
+## Update
+
+```sh
+git pull
+node tools/install.mjs
+```
+
+Herdr reloads the layout and the mod live.
+
+## Uninstall
+
+Switch to another layout, then delete `layouts/aperture.json` and
+`mods/aperture/` from the Herdr home. GLaDOS's records live in Herdr's
+`shared.json` under `aperture.*`. They are harmless, but she would prefer
+you didn't look.
+
+## Optional extras
+
+**Keys.** The layout's mod takes three commands. Add any you want to `keys.json`:
 
 ```json
 "layout:aperture": {
@@ -85,60 +122,77 @@ The layout's mod takes three commands. Add them to `keys.json` if you want them:
 }
 ```
 
-`aperture.cake` runs a cake drill. All three also work from a shell:
+`aperture.cake` runs a cake drill. All three also work from a shell, e.g.
 `herdr-app do aperture.records`.
 
-### Optional themed alert sounds
-
-Herdr's "agent needs you" and "agent finished" sounds belong to
-`settings.json`, which applies to every layout. To use the facility's,
-set them yourself:
+**Themed alert sounds.** Herdr's "agent needs you" and "agent finished"
+sounds come from `settings.json` and apply to every layout. To use the
+facility's, set them yourself:
 
 ```json
 "sounds": { "enabled": true, "done": "mods/aperture/sounds/cake.mp3", "blocked": "mods/aperture/sounds/blocked.mp3" }
 ```
 
-## Limitations (Herdr 0.1.12)
+## Design
 
-These are things Herdr's customization system does not expose. They are
-documented here rather than worked around.
+| Role | Colour |
+|---|---|
+| Facility panel | `#f4f4f0` |
+| Panel rule | `#b7bab5` |
+| Signage ink | `#1b2024` |
+| Monitoring console / terminal | `#151b20` / `#12171b` |
+| Focus, attention, Boot | `#ff8a00` |
+| Testing | `#2fa8e0` |
+| Test complete | `#8cc63f` |
+| Failure | `#e5533d` |
+
+Signage and UI text use Barlow (bundled); terminals use JetBrains Mono. The
+theme overrides every colour, ANSI 0–15 included, so Herdr's own menus and
+dialogs come out as dark consoles too.
+
+## Limitations
+
+What Herdr 0.1.12's customization system doesn't expose, documented rather
+than worked around:
 
 - **Herdr's own screens keep Herdr's words.** The palette, settings,
-  right-click and + menus, rename prompts and Herdr's own "An agent needs
-  you" toasts are shipped mods shared by all layouts. Editing them is
-  reverted on the next start. They do pick up the console colours.
-- **Notifications can't be restyled per layout.** The `toast` mod is global,
-  so Facility Announcements live inside the layout instead.
-- **Alert sounds are global.** See *Optional themed alert sounds*. The
-  layout plays its own sounds only for events Herdr doesn't chime for.
-- **No "error" status for mods.** The core's `error` reaches mods as
-  `blocked`, so a malfunction is announced as *awaiting input*. A failure is
-  recognized by its exit code when the terminal ends. Agents started from
-  Herdr's menus run inside your shell, which stays open after the agent
-  exits, so their exit code isn't visible; they are announced as departed.
-- **Announcements follow redraws.** Events are noticed when Herdr redraws
-  the layout. While the window is minimized they wait until it comes back,
-  and quick changes in that time can merge (for example, a test that started
-  and finished counts as one completion).
-- **Ctrl+Shift+X and the menu's Close bypass the Boot Protocol**, on purpose,
-  so Herdr's own shortcuts keep working. GLaDOS notices: the departure is
-  announced as *terminated outside protocol*.
-- **Barlow Condensed doesn't register** as its own family in this version,
-  so signage uses Barlow SemiBold and Bold.
+  right-click and + menus, prompts and "An agent needs you" toasts are
+  shared by all layouts.
+- **Notifications and alert sounds are global**, so Facility Announcements
+  live inside the layout, and the themed alert sounds are opt-in (above).
+- **No error status for layouts.** A malfunction is announced as awaiting
+  input. A failure is recognized by its exit code when the terminal ends.
+  Agents started from Herdr's menus leave your shell open when they exit,
+  so they are announced as departed rather than failed.
+- **Announcements follow redraws.** While the window is minimized they wait
+  until it is restored, and quick changes in between can merge.
+- **Ctrl+Shift+X and the menu's Close skip the Boot Protocol**, on purpose,
+  so Herdr's shortcuts keep working. The departure is announced as
+  *terminated outside protocol*.
+- **Barlow Condensed doesn't register** as its own family, so signage uses
+  Barlow SemiBold and Bold.
+
+## Compatibility
+
+Tested with Herdr app 0.1.12 and herdr-core 0.1.17 on Windows 11. macOS
+and Linux are untested, but handled: the header leaves room for the
+traffic lights on macOS and draws window buttons only where the system
+draws none.
 
 ## Development
 
 ```sh
-npm test               # node --test on the pure event engine and lexicon
+npm test               # the event engine and GLaDOS lexicon (node --test)
 node tools/art.mjs     # regenerate icons and pictures
 node tools/sounds.mjs  # regenerate sounds (needs ffmpeg)
 node tools/install.mjs
 ```
 
-`aperture/` is the shareable layout folder (layout, mod, `RECIPE.md`,
-`preview.png`). The agent contract is in `AGENTS.md`.
+`aperture/` is the shareable layout folder: the layout, the mod,
+[`RECIPE.md`](aperture/RECIPE.md) and `preview.png`. The agent contract is
+in [`AGENTS.md`](AGENTS.md).
 
 ## License
 
-Code: MIT (see `LICENSE`). Fonts: SIL Open Font License 1.1
-(`aperture/mods/aperture/fonts/OFL.txt`).
+MIT (see `LICENSE`), except the Barlow fonts in `aperture/mods/aperture/fonts/`,
+which are under the SIL Open Font License 1.1 (`OFL.txt` beside them).
