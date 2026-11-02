@@ -75,7 +75,9 @@ consoles.
 | idle | grey | STANDING BY |
 
 - **Clicks.** A facility runs `space.select`; a subject runs `agent.focus`; a
-  test chip runs `tab.select`. Initiate Testing opens `new-menu`. Resume
+  test chip runs `tab.select`. Dragging a chip onto another runs `tab.move`
+  (it takes that chip's place, `index` 1-based among all the space's tabs; an
+  orange bar marks the side it lands on; leaving the bar cancels). Initiate Testing opens `new-menu`. Resume
   Experiment runs `tab.unsettle` then `tab.select`. The header's facility
   opens `app.palette`. The `+` in the sidebar runs `space.new`.
   OBSERVATION RECORDS opens the records window.
@@ -124,7 +126,7 @@ consoles.
 - **One mod, `mods/aperture`** (`place: none`), roles from `props().role`:
   `header`, `sidebar`, `tests`, `pane`, `announcements`, `boot`, `cake`, `records`.
   - `kit.js`: palette and helpers.
-  - `events.js`, `lexicon.js` and `names.js`: pure, unit-tested.
+  - `events.js`, `lexicon.js`, `names.js` and `order.js`: pure, unit-tested.
   - Session names come from each agent's terminal `title` in `agents()`, with
     leading status glyphs stripped; a title equal to the program name is no name.
     Tabs are named from `panes()` titles, so a shell running `claude attach`
