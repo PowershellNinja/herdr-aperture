@@ -1,0 +1,6 @@
+# Written into mod folders by Herdr itself
+gpui-kit.d.ts
+herdr.d.ts
+jsconfig.json
+node_modules/
+*.shot.png
