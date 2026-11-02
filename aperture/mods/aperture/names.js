@@ -3,10 +3,12 @@
 //
 // Claude Code (and other agents) put their session's name in the terminal
 // title, sometimes after a status glyph ("✳ Fix login"). That title is the
-// session name unless it only repeats the program's name.
+// session name unless it only repeats the program's name. Shells' titles
+// (their address, a folder) are never session names.
 
 /** The agent's session name from its terminal title, or null when the title says nothing. */
 export function sessionName(agent) {
+  if (!agent?.program?.agent) return null; // a shell's title is its address or folder, not a session
   const title = String(agent?.title ?? "").replace(/^[^\p{L}\p{N}]+/u, "").trim();
   if (!title) return null;
   const program = String(agent?.program?.name ?? "").trim().toLowerCase();

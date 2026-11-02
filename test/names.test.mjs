@@ -2,7 +2,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { sessionName, testName } from "../aperture/mods/aperture/names.js";
 
-const claude = (title, extra = {}) => ({ address: "t1", tab: "tb2", title, focused: false, program: { name: "Claude Code" }, ...extra });
+const claude = (title, extra = {}) => ({ address: "t1", tab: "tb2", title, focused: false, program: { name: "Claude Code", agent: true }, ...extra });
+
+test("a shell's title is not a session name", () => {
+  assert.equal(sessionName({ address: "t1g", title: "t1g", program: { name: "pwsh", agent: false, shell: true } }), null);
+  assert.equal(sessionName({ address: "t5", title: "C:\\Users\\me", program: { name: "pwsh", shell: true } }), null);
+});
 
 test("a Claude session's title is its name", () => {
   assert.equal(sessionName(claude("Echoes Lyra Origin Story")), "Echoes Lyra Origin Story");

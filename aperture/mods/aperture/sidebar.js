@@ -56,6 +56,7 @@ export default class Sidebar {
       return h_flex().id(`sub-${a.address}`).w_full().h(46).flex_none().pr(12).gap(10).items_center().cursor_pointer()
         .bg(a.focused ? "#ffffff" : C.panel).hover((x) => x.bg(a.focused ? "#ffffff" : C.panel2))
         .border_b(1).border_color(C.panel2)
+        .tooltip(`${session ? session + " · " : ""}${program} · Test ${two(a.tab_index)} · ${a.space_name}`)
         .on_click(() => run("agent.focus", { terminal: a.address }))
         .on_mouse_down("right", onRight(() => menu("pane", { pane: a.pane, terminal: a.address })))
         .child(div().w(4).h_full().flex_none().bg(color)
@@ -65,7 +66,7 @@ export default class Sidebar {
         .child(v_flex().flex_1().min_w(0)
           .child(div().truncate().font_weight(600).text_size(13.5).text_color(C.ink)
             .child(session ?? program))
-          .child(label(`${session ? program + " · " : ""}Test ${two(a.tab_index)} · ${a.space_name}`, C.faint, 10.5).truncate()))
+          .child(label(`Test ${two(a.tab_index)} · ${a.space_name}`, C.faint, 10.5).truncate()))
         .child(div().flex_none().font_family(SIGN).font_weight(700).text_size(10.5).text_color(color)
           .when(a.status === "blocked", (d) => d.loop("opacity", { from: 0.4, to: 1, period: 900 }))
           .child(caps(STATUS_WORD[a.status] ?? a.status)));
