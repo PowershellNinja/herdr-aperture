@@ -59,7 +59,8 @@ export function fill(template, ev) {
   return template
     .replaceAll("{subject}", ev.name ?? "The subject")
     .replaceAll("{facility}", ev.facility || "the facility")
-    .replaceAll("{test}", two(ev.test));
+    .replaceAll("{test}", two(ev.test))
+    .replaceAll("{count}", two(ev.count));
 }
 
 /** The n-th line for this event's kind (callers rotate n so lines don't repeat back to back). */

@@ -2,7 +2,8 @@
 // signage type, icons, Herdr's own menus and the sound helper.
 
 import { div, svg, image } from "gpui-kit";
-import { openOverlay, playSound, settings } from "herdr";
+import { openOverlay, playSound, settings, shared } from "herdr";
+import { prefs, PREFS_KEY } from "./prefs.js";
 
 export const ASSETS = "mods/aperture";
 
@@ -67,9 +68,9 @@ export const newMenu = () => openOverlay({ mod: "new-menu", kind: "popup", width
 export const onRight = (open) => (_e, cx) => { cx.stop_propagation(); open(); };
 export const stopPress = (_e, cx) => cx.stop_propagation();
 
-/** Plays one of the layout's sounds, unless the person turned Herdr's sounds off. */
+/** Plays one of the layout's sounds, unless Herdr's sounds or Facility Settings' sounds are off. */
 export function sfx(name) {
-  if (settings()?.sounds?.enabled === false) return;
+  if (settings()?.sounds?.enabled === false || !prefs(shared(PREFS_KEY)).sounds) return;
   try { playSound(`${ASSETS}/sounds/${name}.mp3`); } catch (e) { console.log(`aperture: sound ${name}: ${e}`); }
 }
 

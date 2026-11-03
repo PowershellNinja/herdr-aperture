@@ -7,7 +7,7 @@ import { props, shared, setShared, closeOverlay, openOverlay } from "herdr";
 import { C, SIGN, caps, two, icon, label, stopPress } from "./kit.js";
 
 export const LOG_KEY = "aperture.log";
-const TONE = { arrived: C.blue, blocked: C.orange, completed: C.green, failed: C.red, booted: C.orange, departed: C.faint, online: C.blue, terminated: C.red, cake: C.green, spared: C.blue };
+const TONE = { arrived: C.blue, blocked: C.orange, completed: C.green, failed: C.red, booted: C.orange, departed: C.faint, online: C.blue, terminated: C.red, cake: C.green, spared: C.blue, lost: C.orange, resumed: C.blue };
 
 export function openRecords() {
   openOverlay({ mod: "aperture", kind: "window", key: "aperture-records", frame: "none", width: 560, height: 460, props: { role: "records" } });

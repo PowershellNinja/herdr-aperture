@@ -70,9 +70,17 @@ test("announcements name the subject, facility and test, and rotate lines", () =
 });
 
 test("every event kind has enough original lines", () => {
-  for (const k of ["online", "arrived", "blocked", "completed", "departed", "terminated", "failed", "booted", "cake", "spared"]) {
+  for (const k of ["online", "arrived", "blocked", "completed", "departed", "terminated", "failed", "booted", "cake", "spared", "lost", "resumed"]) {
     assert.ok((LINES[k] ?? []).length >= 4, `${k} needs at least 4 lines`);
-    for (const line of LINES[k]) assert.doesNotMatch(line, /\{(?!subject\}|facility\}|test\})\w+\}/, `${k}: unknown placeholder in "${line}"`);
+    for (const line of LINES[k]) assert.doesNotMatch(line, /\{(?!subject\}|facility\}|test\}|count\})\w+\}/, `${k}: unknown placeholder in "${line}"`);
+  }
+});
+
+test("the outage announcement says how many sessions were lost", () => {
+  for (let n = 0; n < LINES.lost.length; n++) {
+    const a = announce({ kind: "lost", count: 2 }, n);
+    assert.match(a.text, /02/);
+    assert.doesNotMatch(a.text, /\{\w+\}/);
   }
 });
 

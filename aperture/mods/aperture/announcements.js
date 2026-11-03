@@ -3,17 +3,25 @@
 // has exactly one) also runs the event engine: render() compares agents()
 // with the last look and only queues what happened; a slow timer publishes
 // the queue (log, sounds, the Cake Protocol), so render has no side effects.
+// It also finds Claude sessions lost with their terminal (scanLost) for the
+// pane headers' RESUME EXPERIMENT; it never resumes anything itself.
 // It also takes the layout's key commands: aperture.records, aperture.boot,
-// aperture.cake (a drill).
+// aperture.settings, aperture.cake (a drill).
 
 import { div } from "gpui-kit";
 import { h_flex } from "gpui-base";
-import { agents, panes, shared, setShared, hc, nextCommand, openOverlay } from "herdr";
+import { agents, panes, terminals, shared, setShared, hc, nextCommand, openOverlay } from "herdr";
 import { C, SIGN, two, icon, label, sfx, subjectName, stopPress } from "./kit.js";
 import { snapshot, detect, classifyDeparture, announce, wantsCake } from "./events.js";
 import { openRecords, LOG_KEY } from "./records.js";
 import { openBoot } from "./pane.js";
 import { LINES } from "./lexicon.js";
+import { prefs, PREFS_KEY } from "./prefs.js";
+import { openFacilitySettings } from "./settings.js";
+import { candidates, unseen } from "./recovery.js";
+import { shellIdle, LOST_KEY } from "./resume.js";
+
+export const LOST_SEEN_KEY = "aperture.lostSeen"; // sessions already announced as lost
 
 const KEEP = 80; // log entries kept in shared state
 export const BOOTING_KEY = "aperture.booting"; // { address: ms } set by the Boot Protocol
@@ -47,12 +55,42 @@ export default class Announcements {
     if (Date.now() - last > 30 * 60 * 1000) this.queue.push({ kind: "online" });
 
     cx.timer.every(700, (cx) => this.publish(cx));
+    // Lost Claude sessions (see recovery.js): once Herdr has its terminals, then gently.
+    cx.timer.after(2000, (cx) => this.scanLost(cx));
+    cx.timer.every(30000, (cx) => this.scanLost(cx));
     cx.spawn(async (cx) => {
       for (;;) {
         const c = await nextCommand();
         try { this.command(c); } catch (e) { console.log(`aperture: ${c} failed: ${e}`); }
         cx.notify();
       }
+    });
+  }
+
+  // Keeps shared LOST_KEY to the lost sessions whose shell is idle now, and
+  // announces sessions not announced before (one line per outage).
+  scanLost(cx) {
+    if (this.scanning) return;
+    const found = candidates(terminals(), agents(), panes());
+    const before = Array.isArray(shared(LOST_KEY)) ? shared(LOST_KEY) : [];
+    if (!found.length) {
+      if (before.length) setShared(LOST_KEY, []);
+      return;
+    }
+    this.scanning = true;
+    cx.spawn(async (cx) => {
+      const lost = [];
+      for (const c of found) if (await shellIdle(c.terminal)) lost.push(c);
+      this.scanning = false;
+      if (JSON.stringify(lost) !== JSON.stringify(before)) setShared(LOST_KEY, lost);
+      const seen = Array.isArray(shared(LOST_SEEN_KEY)) ? shared(LOST_SEEN_KEY) : [];
+      const fresh = unseen(lost, seen);
+      if (fresh.length) {
+        setShared(LOST_SEEN_KEY, [...seen, ...fresh.map((l) => l.session)].slice(-50));
+        const a = this.line({ kind: "lost", count: fresh.length });
+        record({ kind: a.kind, tag: a.tag, text: a.text });
+      }
+      cx.notify();
     });
   }
 
@@ -71,7 +109,7 @@ export default class Announcements {
         record({ kind: a.kind, tag: a.tag, text: a.text, address: ev.address });
         if (ev.kind === "online") { setShared(ONLINE_KEY, Date.now()); sfx("online"); }
         else if (SOUND[ev.kind]) sfx(SOUND[ev.kind]);
-        if (wantsCake(ev)) openCake(ev, this.line({ ...ev, kind: "cake" }).text);
+        if (wantsCake(ev) && prefs(shared(PREFS_KEY)).cake) openCake(ev, this.line({ ...ev, kind: "cake" }).text);
       }
     }
     // Give a departed subject's terminal a moment to finish, then ask the core how it ended.
@@ -98,6 +136,7 @@ export default class Announcements {
 
   command(c) {
     if (c === "records") return openRecords();
+    if (c === "settings") return openFacilitySettings();
     if (c === "boot") {
       const p = panes().find((x) => x.focused);
       if (p) openBoot(p.pane, p.terminal, subjectName(p));

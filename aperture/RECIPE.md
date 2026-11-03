@@ -24,7 +24,10 @@ JetBrains Mono. Signage is Barlow 600–700 in capitals. Palette: panel
    - A 40px black square holding the shown space's index (`01`, 26px), then
      `TESTING FACILITY` and the space name, then `CURRENT TEST` and `TEST nn · name`.
    - On the right, counts with dots: `nn TESTING` (blue), `nn AWAITING`
-     (orange, pulsing), `nn COMPLETE` (green), then `FACILITY TIME` with HH:MM.
+     (orange, pulsing), `nn COMPLETE` (green), then `FACILITY TIME` with HH:MM,
+     then a 17px gear (an orange dot when `updates().app.ready`) that opens a
+     250×92 popup: `Facility Settings` (the layout's dialog) and `Herdr Settings`
+     (`app.settings`, `Ctrl+,`).
    - On Windows and Linux, 42px window buttons (close turns red on hover).
      On macOS, 86px left padding for the traffic lights.
 2. **Sidebar, 284px (220–440), panel colour, rule on the right.**
@@ -32,20 +35,30 @@ JetBrains Mono. Signage is Barlow 600–700 in capitals. Palette: panel
    - Rows of 48px: a 4px orange bar when shown, a 32px number square (black
      when shown), the name, then `nn TESTS · status` (orange when blocked) and a status dot.
    - `TEST SUBJECTS` with a count, then rows of 46px: a 4px status bar, the
-     program tile and icon, the program name, `TEST nn · space`, and the status
+     program tile and icon, the session name (else the program name),
+     `TEST nn · space` (the program and all of it in the row's tooltip), and the status
      word at the right (`TESTING`, `AWAITING INPUT`, `TEST COMPLETE`, `STANDING BY`).
    - The GLaDOS monitor at the bottom: console colour with a 3px orange top
      border, a 46px optic, `GLaDOS` / `FACILITY OVERSEER · ONLINE`, the
      latest announcement, and `OBSERVATION RECORDS` with the entry count.
 3. **Work area, padding 10/12, gap 8.**
-   - Tests bar, 38px: chips `TEST nn` plus the tab's name when it has one,
+   - Tests bar, 38px: chips `TEST nn` plus a name: the tab's own when someone
+     named it, else a pane title that names something (the focused pane's,
+     else an agent's, else any): an agent's session name, or a title a
+     program set in a shell, but not the shell's folder, address or program name,
      with a 3px top bar (orange when shown, else the status colour) and a
      status dot. Then an orange `+ INITIATE TESTING` button. Settled tabs show
-     at the right as `▶ RESUME EXPERIMENT · name`.
+     at the right as `▶ RESUME EXPERIMENT · name`, then `FILES` and `CHANGES`
+     (black when their panel shows; only those listed in shared
+     `workspace.panels`, default both). They run `layout.select {stack:
+     "panel-body", child}` + `layout.show {id: "panel"}`, or `layout.hide`.
+   - The panel: 368px (280–900), radius 6, border `#7d8487`, surface
+     colour, hidden at first, holding Herdr's `files` and `changes` mods.
    - Panes: background `#12171b`, radius 6, border `#7d8487` 1px, focus
      orange 2px, gap 10, framed even when alone. Each has a 28px header: a red
      dot pulsing when focused, `OBSERVATION FEED`, the program icon and name,
-     the folder, a status pill, split right, split down, zoom, and `BOOT`.
+     the folder, a status pill, split right, split down, zoom (only when the
+     tab has more than one pane, or to restore), and `BOOT`.
 4. **Footer, 34px.** A black `FACILITY ANNOUNCEMENTS` block (the speaker
    icon pulses for 20s after a new line), the latest tag and line,
    `CAKES PROMISED nn · DELIVERED 00`, and `OBSERVATION RECORDS nn`.
@@ -64,7 +77,9 @@ consoles.
 | idle | grey | STANDING BY |
 
 - **Clicks.** A facility runs `space.select`; a subject runs `agent.focus`; a
-  test chip runs `tab.select`. Initiate Testing opens `new-menu`. Resume
+  test chip runs `tab.select`. Dragging a chip onto another runs `tab.move`
+  (it takes that chip's place, `index` 1-based among all the space's tabs; an
+  orange bar marks the side it lands on; leaving the bar cancels). Initiate Testing opens `new-menu`. Resume
   Experiment runs `tab.unsettle` then `tab.select`. The header's facility
   opens `app.palette`. The `+` in the sidebar runs `space.new`.
   OBSERVATION RECORDS opens the records window.
@@ -93,10 +108,28 @@ consoles.
   in (left, 220ms) and the subject plate leaves (left and opacity, 420ms after
   180ms). At 650ms it re-checks that the pane still shows the same terminal,
   sets `aperture.booting[terminal]`, runs `pane.close`, and closes itself.
-- **Sounds** (`playSound`, skipped when `settings().sounds.enabled === false`):
-  `online`, `arrive`, `thunk` (terminated), `fail`, `boot`, and `tick` (Initiate,
-  Resume, Spare).
-- **Keys** to the mod (`nextCommand`, footer copy): `records`, `boot` (focused pane), `cake` (drill).
+- **Sounds** (`playSound`, skipped when `settings().sounds.enabled === false`
+  or Facility sounds is off): `online`, `arrive`, `thunk` (terminated), `fail`,
+  `boot`, and `tick` (Initiate, Resume, Spare).
+- **Facility Settings**: a 460×296 dialog with two switches, `FACILITY SOUNDS`
+  and `CAKE PROTOCOL` (orange when on; the knob slides in 140ms). Clicking a
+  row flips it in shared `aperture.prefs` (`{ sounds, cake }`, both true by
+  default; only booleans count). With Cake Protocol off, a completion is still
+  announced but no cake window opens and nothing is promised.
+- **Lost Claude sessions** (opt-in hook, see README): `hooks/claude-session.mjs`
+  runs on Claude Code's SessionStart/SessionEnd and sets or clears the label
+  `aperture.claude=<session uuid>` on `HC_TERMINAL_ID` via `hc label`. The
+  footer copy scans 2s after start, then every 30s: a terminal is lost when
+  it has a valid label, is live, local, in a pane, not in `agents()`, and its
+  shell has no child process (`hc get` pid, then `Get-CimInstance
+  Win32_Process` on Windows, `pgrep -P` elsewhere). Shared `aperture.lost`
+  feeds the pane header's orange pulsing `RESUME EXPERIMENT` and a resume
+  icon on the test chip; new ones get one `SUBJECTS LOST IN OUTAGE` line
+  (`aperture.lostSeen`). The button re-checks idleness, then `hc send <t>
+  "claude --resume <id>"`, logs `EXPERIMENT RESUMED` (or `RESUME REFUSED`).
+  Nothing resumes on its own.
+- **Keys** to the mod (`nextCommand`, footer copy): `records`, `boot` (focused
+  pane), `settings`, `cake` (drill).
 
 ## Built from
 
@@ -105,17 +138,26 @@ consoles.
   `ui_font: "Barlow"` and a gradient background `#e4e5e0 → #c9cbc5`.
   - `header` block (px 60, window_drag).
   - `body` row: `sidebar` block (px 284, min 220, max 440) and `work` column
-    (resizable false) with `tabs` (px 38) and `main` (`tab: active` with the
-    pane frame and a header `{ mod: aperture, props: { role: pane } }`, 28px, top, always).
+    (resizable false) with `tabs` (px 38) and a `work-body` row (gap 10) of
+    `main` (`tab: active` with the pane frame and a header
+    `{ mod: aperture, props: { role: pane } }`, 28px, top, always) and the
+    hidden `panel` column with the `panel-body` stack (`files`, `changes`).
   - `footer` block (px 34).
 - **One mod, `mods/aperture`** (`place: none`), roles from `props().role`:
-  `header`, `sidebar`, `tests`, `pane`, `announcements`, `boot`, `cake`, `records`.
+  `header`, `sidebar`, `tests`, `pane`, `announcements`, `boot`, `cake`,
+  `records`, `gear`, `settings`.
   - `kit.js`: palette and helpers.
-  - `events.js` and `lexicon.js`: pure, unit-tested.
+  - `events.js`, `lexicon.js`, `names.js`, `order.js`, `prefs.js` and
+    `recovery.js`: pure, unit-tested; `resume.js`: the idle check and `hc send`.
+  - Session names come from each agent's terminal `title` in `agents()`, with
+    leading status glyphs stripped; a title equal to the program name is no name.
+    Tabs are named from `panes()` titles, so a shell running `claude attach`
+    (no agent status, Herdr sees pwsh) still names its tab; Test Subjects stay
+    agents only, since only they have a status.
 - **herdr functions:** spaces, agents, panes, run, setAgentOrder, shared,
   setShared, hc, nextCommand, openOverlay, closeOverlay, playSound,
   settings, window, props, home.
-- **Shipped mods used:** `menu`, `new-menu`.
+- **Shipped mods used:** `menu`, `new-menu`, `files`, `changes`.
 - **Programs run:** `hc ls --json --all` (only after a departure).
 - **Art and sound:** generated by `tools/art.mjs` and `tools/sounds.mjs` (ffmpeg).
 

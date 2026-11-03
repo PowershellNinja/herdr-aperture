@@ -84,25 +84,54 @@
               "content": { "mod": "aperture", "props": { "role": "tests" } }
             },
             {
-              "id": "main",
-              "type": "block",
-              "content": {
-                "tab": "active",
-                "pane": {
-                  "gap": 10,
-                  "radius": 6,
-                  "background": "background",
-                  "lone": true,
-                  "border": { "width": 1, "color": "#7d8487" },
-                  "focus": { "width": 2, "color": "#ff8a00" },
-                  "header": {
-                    "content": { "mod": "aperture", "props": { "role": "pane" } },
-                    "height": 28,
-                    "position": "top",
-                    "reveal": "always"
+              "id": "work-body",
+              "type": "row",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "main",
+                  "type": "block",
+                  "content": {
+                    "tab": "active",
+                    "pane": {
+                      "gap": 10,
+                      "radius": 6,
+                      "background": "background",
+                      "lone": true,
+                      "border": { "width": 1, "color": "#7d8487" },
+                      "focus": { "width": 2, "color": "#ff8a00" },
+                      "header": {
+                        "content": { "mod": "aperture", "props": { "role": "pane" } },
+                        "height": 28,
+                        "position": "top",
+                        "reveal": "always"
+                      }
+                    }
                   }
+                },
+                {
+                  "id": "panel",
+                  "type": "column",
+                  "hidden": true,
+                  "size": { "px": 368 },
+                  "min": 280,
+                  "max": 900,
+                  "radius": 6,
+                  "border": { "width": 1, "color": "#7d8487" },
+                  "background": "surface",
+                  "children": [
+                    {
+                      "id": "panel-body",
+                      "type": "stack",
+                      "active": "files",
+                      "children": [
+                        { "id": "files", "type": "block", "content": { "mod": "files" } },
+                        { "id": "changes", "type": "block", "content": { "mod": "changes" } }
+                      ]
+                    }
+                  ]
                 }
-              }
+              ]
             }
           ]
         }

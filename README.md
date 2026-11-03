@@ -19,17 +19,25 @@ Observation Records open. Private paths are blurred.
 
 - **Facility frame.** The header carries the Enrichment Center mark, the
   shown Testing Facility as a chamber sign, the current test, live counts
-  (testing, awaiting, complete), the facility clock and window buttons.
+  (testing, awaiting, complete), the facility clock, the settings gear
+  (Facility Settings and Herdr's Settings, with a dot when an update waits)
+  and window buttons.
   Click the facility for the command palette; right-click it for Herdr's
   space menu.
 - **Testing Facilities and Test Subjects.** Spaces are numbered chamber
-  signs. Agents are listed with their test status, and a subject waiting for
-  you pulses orange.
-- **Tests bar.** Tabs are chamber tabs coloured by status. **Initiate
+  signs. Agents are listed by their session name (Claude Code's conversation
+  title, else the program) with their test status, and a subject waiting
+  for you pulses orange.
+- **Tests bar.** Tabs are chamber tabs coloured by status, named after their
+  session unless you named the tab yourself. A plain shell whose title a
+  program set (e.g. `claude attach` showing a background session) names its
+  tab too; a shell's own folder or address never does. Drag a test onto
+  another to reorder. **Initiate
   Testing** opens Herdr's own + menu: a shell or any installed agent. Settled
-  tabs wait at the right as **Resume Experiment**.
+  tabs wait at the right as **Resume Experiment**. **FILES** and **CHANGES**
+  open Herdr's own Files and Changes panels beside the terminals.
 - **Observation feeds.** Every pane gets a header with the subject, its
-  folder, its status, split, zoom and **BOOT**.
+  folder, its status, split, zoom (once the test is split) and **BOOT**.
 - **GLaDOS.** A monitor in the sidebar holds a breathing optic (faster when
   someone is waiting) and the latest Facility Announcement. Original lines
   react to real events: a subject arriving, waiting for input, completing,
@@ -111,9 +119,62 @@ Switch to another layout, then delete `layouts/aperture.json` and
 `shared.json` under `aperture.*`. They are harmless, but she would prefer
 you didn't look.
 
+## Facility Settings
+
+The header gear opens **Facility Settings**, the layout's own switches:
+
+- **Facility sounds:** the chime, arrivals, boot, failure buzz and button
+  ticks. Herdr's alert sounds are set in Herdr's Settings.
+- **Cake Protocol:** the cake window for tests completed while you weren't
+  looking. GLaDOS still announces the completion.
+
+Both start on and are kept in Herdr's `shared.json` (`aperture.prefs`).
+Herdr's own Settings window can't be extended by layouts, so these live in
+their own dialog. The same gear also opens Herdr's Settings.
+
+## Resume lost Claude sessions (opt-in)
+
+When the machine reboots or herdr-core crashes, Herdr brings back every tab
+with a fresh shell, but the Claude sessions that ran there are gone. With
+the hook below, each Herdr terminal remembers the Claude session it runs.
+After such an outage:
+
+- the pane's observation feed shows **RESUME EXPERIMENT**, which types
+  `claude --resume <session-id>` into that shell;
+- its test chip carries a small resume marker;
+- GLaDOS announces how many subjects were lost.
+
+Nothing is resumed on its own. The button only appears, and only types,
+when the shell is idle (no running program). A session that ends normally
+clears its mark, so only sessions lost with their terminal are offered.
+
+**Setup:** add the hook to `~/.claude/settings.json` (merge it with any
+`hooks` you already have; `$HOME` works in both Git Bash and PowerShell,
+which run Claude Code hooks on Windows; adjust the path if your Herdr home differs):
+
+```json
+"hooks": {
+  "SessionStart": [{ "hooks": [{ "type": "command",
+    "command": "node \"$HOME/.config/herdr-app/mods/aperture/hooks/claude-session.mjs\" start" }] }],
+  "SessionEnd": [{ "hooks": [{ "type": "command",
+    "command": "node \"$HOME/.config/herdr-app/mods/aperture/hooks/claude-session.mjs\" end" }] }]
+}
+```
+
+The hook only labels the terminal it runs in (`hc label <terminal>
+aperture.claude=<session-id>`). Outside a Herdr terminal it does nothing,
+and it never fails a Claude session. It only covers sessions started after
+it was added.
+
+Limits: commands that run inside the shell itself (a PowerShell cmdlet such
+as `Copy-Item`, a script waiting at `Read-Host`) start no child process, so
+the shell looks idle. Resume first presses Ctrl+C to clear the prompt line,
+which would interrupt such a command: check the pane before clicking. A
+`claude -p` run inside a session overwrites the session's mark until it ends.
+
 ## Optional extras
 
-**Keys.** The layout's mod takes three commands. Add any you want to `keys.json`:
+**Keys.** The layout's mod takes four commands. Add any you want to `keys.json`:
 
 ```json
 "layout:aperture": {
@@ -122,8 +183,8 @@ you didn't look.
 }
 ```
 
-`aperture.cake` runs a cake drill. All three also work from a shell, e.g.
-`herdr-app do aperture.records`.
+`aperture.settings` opens Facility Settings and `aperture.cake` runs a cake
+drill. All four also work from a shell, e.g. `herdr-app do aperture.records`.
 
 **Themed alert sounds.** Herdr's "agent needs you" and "agent finished"
 sounds come from `settings.json` and apply to every layout. To use the

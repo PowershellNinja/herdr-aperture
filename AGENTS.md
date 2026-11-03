@@ -14,14 +14,19 @@ An Aperture Science / GLaDOS layout for the Herdr desktop app.
 - `aperture/` is the community-layout folder: `layouts/aperture.json`,
   `mods/aperture/`, `RECIPE.md`, `preview.png`.
 - One mod, many roles (`props().role`), like Herdr 98 and LCARS.
-- `events.js` and `lexicon.js` are pure: no `herdr` / `gpui-kit` imports, so
-  `node --test` can run them.
+- `events.js`, `lexicon.js`, `names.js`, `order.js`, `prefs.js` and
+  `recovery.js` are pure: no `herdr` / `gpui-kit` imports, so `node --test`
+  can run them. `hooks/claude-session.mjs` runs under plain Node (Claude
+  Code's hook), never inside Herdr.
 - All art, sounds and dialogue are original. Fonts are OFL (Barlow).
   No Valve logos, audio or quoted game lines.
 
 ## Tier 2 here
 - Anything that ends a terminal (Boot Protocol). It always asks first and
   acts only on the pane it was opened for.
+- Anything that types into a terminal (Resume Experiment). Only on a click,
+  only a validated session id, only into a shell with no child process,
+  checked right before sending.
 - Writing outside `mods/aperture/` or `layouts/aperture.json` in the Herdr
   home. Never touch `settings.json`, `keys.json` or Herdr's shipped
   layouts and mods.

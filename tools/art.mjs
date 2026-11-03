@@ -27,6 +27,9 @@ const ICONS = {
   records: tinted(`<rect x="3" y="2" width="10" height="12" rx="1"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3"/>`),
   resume: tinted(`<path d="M5 3.5v9l7-4.5z"/>`),
   speaker: tinted(`<path d="M2.5 6v4h2.5l3.5 3V3L5 6z"/><path d="M10.5 5.5c.8.7 1.2 1.6 1.2 2.5s-.4 1.8-1.2 2.5M12.3 3.8c1.3 1.1 2 2.6 2 4.2s-.7 3.1-2 4.2"/>`),
+  settings: tinted(`<circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v1.7M8 12.5v1.7M1.8 8h1.7M12.5 8h1.7M3.6 3.6l1.2 1.2M11.2 11.2l1.2 1.2M3.6 12.4l1.2-1.2M11.2 4.8l1.2-1.2"/><circle cx="8" cy="8" r="4.6"/>`),
+  files: tinted(`<path d="M2.5 4.5v8h11v-6.5H7.5L6 4.5z"/>`),
+  changes: tinted(`<path d="M4.5 2.5v11M2 5h5M10 4h4M11.5 12.5v-4M9 10.5l2.5 2.5 2.5-2.5"/>`),
   facility: tinted(`<rect x="2.5" y="2.5" width="11" height="11"/><path d="M2.5 6.5h11M6.5 6.5v7"/>`),
   boot: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1.5h4.2l.3 6.3 4.6 1.7c1 .4 1.6 1.2 1.6 2.2V13H1.6v-1.2c0-.6.4-1 .9-1.1l1-.2z"/><rect x="1.6" y="13.6" width="12.8" height="1.4" rx=".4"/></svg>`,
 };
