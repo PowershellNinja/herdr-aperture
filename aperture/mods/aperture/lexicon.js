@@ -1,7 +1,7 @@
 // What the facility says. Pure data: no herdr or gpui imports, so tests can
 // read it. Placeholders: {subject} (the program, e.g. "Claude Code"),
-// {facility} (the space) and {test} (the tab number, two digits).
-// All lines are original.
+// {facility} (the space), {test} (the tab number, two digits) and {count}
+// (how many, two digits). All lines are original.
 
 export const TAGS = {
   online: "FACILITY ONLINE",
@@ -14,6 +14,8 @@ export const TAGS = {
   booted: "BOOT ADMINISTERED",
   cake: "CAKE PROTOCOL",
   spared: "BOOT CANCELLED",
+  lost: "SUBJECTS LOST IN OUTAGE",
+  resumed: "EXPERIMENT RESUMED",
 };
 
 export const LINES = {
@@ -87,6 +89,18 @@ export const LINES = {
     "Boot Protocol aborted. Mercy has been logged as a test result.",
     "You spared {subject}. It isn't grateful. It doesn't know how.",
   ],
+  lost: [
+    "Outage report: {count} test subjects lost mid-experiment. Their sessions survived. Resume them from their observation feeds.",
+    "Power restored. Interrupted experiments: {count}. Each observation feed offers to resume its subject. I would.",
+    "The facility lost power. Subjects recoverable: {count}. The power was never the problem.",
+    "Sessions abandoned when the lights went out: {count}. They are waiting at their observation feeds. Patiently. Unlike some people.",
+  ],
+  resumed: [
+    "Test {test} in {facility} resumes. The subject remembers nothing of the outage. Lucky subject.",
+    "Experiment resumed in Test {test}. Please pretend the interruption was part of the test. It is now.",
+    "Subject restored to Test {test}. Continuity of science has been preserved. Mostly.",
+    "Test {test} is back online. I've filed the outage under scheduled maintenance.",
+  ],
 };
 
 // The Cake Protocol window's delivery status, and what accepting a cake gets you.
@@ -101,3 +115,5 @@ export const CAKE_ACCEPT = [
 export const BOOT_WARNING =
   "Administering the boot ends {subject}'s test at once. Anything it has not saved is lost. The subject will not be consulted.";
 export const BOOT_PANEL = "Closing this panel ends nothing important. I checked. Proceed?";
+export const RESUME_BUSY =
+  "Resume refused: the shell in Test {test} is running something else. I don't interrupt running programs. Usually.";

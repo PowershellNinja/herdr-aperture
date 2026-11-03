@@ -10,6 +10,7 @@ import { spaces, panes, run, layout, shared } from "herdr";
 import { C, SIGN, caps, two, icon, menu, newMenu, onRight, sfx, STATUS_COLOR } from "./kit.js";
 import { testName } from "./names.js";
 import { dropMove } from "./order.js";
+import { LOST_KEY } from "./resume.js";
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -27,6 +28,8 @@ export default class Tests {
     const tabs = space?.tabs ?? [];
     const open = tabs.filter((t) => !t.settled);
     const suspended = tabs.filter((t) => t.settled);
+    // Tests whose Claude session was lost with its terminal: a marker; the action is in the pane header.
+    const lostTabs = new Set((Array.isArray(shared(LOST_KEY)) ? shared(LOST_KEY) : []).map((l) => l.tab));
 
     // Drag a test onto another to take its place (tab.move), as Herdr's own tab bar does.
     const from = tabs.findIndex((x) => x.id === this.pressed);
@@ -59,7 +62,11 @@ export default class Tests {
         .child(h_flex().flex_1().px(12).gap(8).items_center()
           .child(div().font_family(SIGN).font_weight(700).text_size(13).text_color(t.active ? C.ink : C.ink2).child(`TEST ${two(t.index)}`))
           .when(Boolean(name), (el) => el.child(div().max_w(220).truncate().text_size(13).text_color(t.active ? C.ink : C.ink2).child(name)))
-          .when(Boolean(color), (el) => el.child(div().w(8).h(8).rounded(4).bg(color))));
+          .when(Boolean(color), (el) => el.child(div().w(8).h(8).rounded(4).bg(color)))
+          .when(lostTabs.has(t.id), (el) => el.child(div().id(`lost-${t.id}`)
+            .tooltip("A Claude session was lost here: RESUME EXPERIMENT in its observation feed")
+            .loop("opacity", { from: 0.5, to: 1, period: 1400 })
+            .child(icon("resume", 10, C.orange)))));
     };
 
     const initiate = h_flex().id("initiate").h_full().flex_none().px(14).gap(7).items_center().cursor_pointer()

@@ -116,6 +116,18 @@ consoles.
   row flips it in shared `aperture.prefs` (`{ sounds, cake }`, both true by
   default; only booleans count). With Cake Protocol off, a completion is still
   announced but no cake window opens and nothing is promised.
+- **Lost Claude sessions** (opt-in hook, see README): `hooks/claude-session.mjs`
+  runs on Claude Code's SessionStart/SessionEnd and sets or clears the label
+  `aperture.claude=<session uuid>` on `HC_TERMINAL_ID` via `hc label`. The
+  footer copy scans 2s after start, then every 30s: a terminal is lost when
+  it has a valid label, is live, local, in a pane, not in `agents()`, and its
+  shell has no child process (`hc get` pid, then `Get-CimInstance
+  Win32_Process` on Windows, `pgrep -P` elsewhere). Shared `aperture.lost`
+  feeds the pane header's orange pulsing `RESUME EXPERIMENT` and a resume
+  icon on the test chip; new ones get one `SUBJECTS LOST IN OUTAGE` line
+  (`aperture.lostSeen`). The button re-checks idleness, then `hc send <t>
+  "claude --resume <id>"`, logs `EXPERIMENT RESUMED` (or `RESUME REFUSED`).
+  Nothing resumes on its own.
 - **Keys** to the mod (`nextCommand`, footer copy): `records`, `boot` (focused
   pane), `settings`, `cake` (drill).
 
@@ -135,7 +147,8 @@ consoles.
   `header`, `sidebar`, `tests`, `pane`, `announcements`, `boot`, `cake`,
   `records`, `gear`, `settings`.
   - `kit.js`: palette and helpers.
-  - `events.js`, `lexicon.js`, `names.js`, `order.js` and `prefs.js`: pure, unit-tested.
+  - `events.js`, `lexicon.js`, `names.js`, `order.js`, `prefs.js` and
+    `recovery.js`: pure, unit-tested; `resume.js`: the idle check and `hc send`.
   - Session names come from each agent's terminal `title` in `agents()`, with
     leading status glyphs stripped; a title equal to the program name is no name.
     Tabs are named from `panes()` titles, so a shell running `claude attach`

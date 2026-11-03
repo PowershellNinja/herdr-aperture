@@ -132,6 +132,40 @@ Both start on and are kept in Herdr's `shared.json` (`aperture.prefs`).
 Herdr's own Settings window can't be extended by layouts, so these live in
 their own dialog. The same gear also opens Herdr's Settings.
 
+## Resume lost Claude sessions (opt-in)
+
+When the machine reboots or herdr-core crashes, Herdr brings back every tab
+with a fresh shell, but the Claude sessions that ran there are gone. With
+the hook below, each Herdr terminal remembers the Claude session it runs.
+After such an outage:
+
+- the pane's observation feed shows **RESUME EXPERIMENT**, which types
+  `claude --resume <session-id>` into that shell;
+- its test chip carries a small resume marker;
+- GLaDOS announces how many subjects were lost.
+
+Nothing is resumed on its own. The button only appears, and only types,
+when the shell is idle (no running program). A session that ends normally
+clears its mark, so only sessions lost with their terminal are offered.
+
+**Setup:** add the hook to `~/.claude/settings.json` (merge it with any
+`hooks` you already have; `$HOME` works in both Git Bash and PowerShell,
+which run Claude Code hooks on Windows; adjust the path if your Herdr home differs):
+
+```json
+"hooks": {
+  "SessionStart": [{ "hooks": [{ "type": "command",
+    "command": "node \"$HOME/.config/herdr-app/mods/aperture/hooks/claude-session.mjs\" start" }] }],
+  "SessionEnd": [{ "hooks": [{ "type": "command",
+    "command": "node \"$HOME/.config/herdr-app/mods/aperture/hooks/claude-session.mjs\" end" }] }]
+}
+```
+
+The hook only labels the terminal it runs in (`hc label <terminal>
+aperture.claude=<session-id>`). Outside a Herdr terminal it does nothing,
+and it never fails a Claude session. It only covers sessions started after
+it was added.
+
 ## Optional extras
 
 **Keys.** The layout's mod takes four commands. Add any you want to `keys.json`:
