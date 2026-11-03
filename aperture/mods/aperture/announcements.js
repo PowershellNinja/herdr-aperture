@@ -13,6 +13,7 @@ import { h_flex } from "gpui-base";
 import { agents, panes, terminals, shared, setShared, hc, nextCommand, openOverlay } from "herdr";
 import { C, SIGN, two, icon, label, sfx, subjectName, stopPress } from "./kit.js";
 import { snapshot, detect, classifyDeparture, announce, wantsCake } from "./events.js";
+import { sessionName } from "./names.js";
 import { openRecords, LOG_KEY } from "./records.js";
 import { openBoot } from "./pane.js";
 import { LINES } from "./lexicon.js";
@@ -144,7 +145,7 @@ export default class Announcements {
     }
     if (c === "cake") {
       const a = agents().find((x) => x.focused) ?? agents()[0];
-      const ev = { kind: "completed", unseen: true, address: a?.address, name: a?.program?.name ?? "Test subject", facility: a?.space_name ?? "", test: a?.tab_index ?? 1 };
+      const ev = { kind: "completed", unseen: true, address: a?.address, name: sessionName(a) ?? a?.program?.name ?? "Test subject", facility: a?.space_name ?? "", test: a?.tab_index ?? 1 };
       openCake(ev, this.line({ ...ev, kind: "cake" }).text);
     }
   }
