@@ -3,6 +3,7 @@
 // gpui imports, so `node --test` runs it.
 
 import { LINES, TAGS } from "./lexicon.js";
+import { sessionName } from "./names.js";
 
 const two = (n) => String(n ?? 0).padStart(2, "0");
 
@@ -12,7 +13,7 @@ export function snapshot(agents) {
   for (const a of agents ?? []) {
     s[a.address] = {
       status: a.status,
-      name: a.program?.name ?? a.app ?? "Subject",
+      name: sessionName(a) ?? a.program?.name ?? a.app ?? "Subject",
       facility: a.space_name ?? "",
       test: a.tab_index ?? 0,
     };

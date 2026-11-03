@@ -89,3 +89,10 @@ test("cake is served only for a test completed while nobody watched", () => {
   assert.equal(wantsCake({ kind: "completed", unseen: false }), false);
   assert.equal(wantsCake({ kind: "blocked", unseen: true }), false);
 });
+
+test("a subject is announced by its session name, else by its program", () => {
+  const named = agent("t1", "working", { program: { name: "Claude Code", agent: true }, title: "✳ Fix login" });
+  const unnamed = agent("t2", "working", { program: { name: "Claude Code", agent: true }, title: "Claude Code" });
+  const arrived = detect(snapshot([]), snapshot([named, unnamed]));
+  assert.deepEqual(arrived.map((e) => e.name), ["Fix login", "Claude Code"]);
+});
