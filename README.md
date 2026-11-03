@@ -166,6 +166,10 @@ aperture.claude=<session-id>`). Outside a Herdr terminal it does nothing,
 and it never fails a Claude session. It only covers sessions started after
 it was added.
 
+Limits: a script waiting for input (`Read-Host`, `read`) runs no child
+process, so its shell looks idle; check the pane before clicking. A
+`claude -p` run inside a session overwrites the session's mark until it ends.
+
 ## Optional extras
 
 **Keys.** The layout's mod takes four commands. Add any you want to `keys.json`:

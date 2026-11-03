@@ -13,15 +13,17 @@ export const validSession = (id) => SESSION.test(String(id ?? ""));
 
 /**
  * Terminals with a lost session that could be resumed: a valid session label,
- * live, shown in a Herdr pane, on this machine, and not running an agent now.
+ * live, shown in a Herdr pane, on this machine, not running an agent now,
+ * and its session not already running again in another terminal.
  * Whether its shell is really idle is checked separately (a process query).
  */
 export function candidates(terminals, agents, panes) {
   const running = new Set((agents ?? []).map((a) => a.address));
+  const live = new Set((terminals ?? []).filter((t) => running.has(t.address)).map((t) => t.labels?.[RESUME_LABEL]));
   const out = [];
   for (const t of terminals ?? []) {
     const session = t?.labels?.[RESUME_LABEL];
-    if (!validSession(session) || t.state !== "live" || running.has(t.address) || String(t.address).includes("/")) continue;
+    if (!validSession(session) || t.state !== "live" || running.has(t.address) || live.has(session) || String(t.address).includes("/")) continue;
     const p = (panes ?? []).find((x) => x.terminal === t.address);
     if (p) out.push({ terminal: t.address, session, pane: p.pane, tab: p.tab });
   }

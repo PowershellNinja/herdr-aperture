@@ -32,6 +32,11 @@ test("a running agent, a finished or paneless terminal, or a bad label is no can
   assert.deepEqual(candidates([term("t1")], [], [pane("t1")]), []);
 });
 
+test("a session already running again in another terminal is not offered twice", () => {
+  const resumedElsewhere = term("t2", ID);
+  assert.deepEqual(candidates([term("t1", ID), resumedElsewhere], [{ address: "t2" }], [pane("t1"), pane("t2")]), []);
+});
+
 test("terminals on other machines are left alone", () => {
   assert.deepEqual(candidates([term("vps/t3", ID)], [], [pane("vps/t3")]), []);
 });

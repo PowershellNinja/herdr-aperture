@@ -26,9 +26,18 @@ export async function shellIdle(terminal) {
   }
 }
 
-/** Types the resume command into the terminal if its shell is idle. Resolves true when sent. */
+/**
+ * Types the resume command into the terminal if its shell is idle. Ctrl+C first
+ * clears anything half-typed at the prompt (`hc send` types at the cursor).
+ * Resolves true when sent; false on any failure, never throws.
+ */
 export async function resumeSession(lost) {
-  if (!validSession(lost?.session) || !(await shellIdle(lost.terminal))) return false;
-  const r = await hc(["send", lost.terminal, resumeCommand(lost.session)]);
-  return r.code === 0;
+  try {
+    if (!validSession(lost?.session) || !(await shellIdle(lost.terminal))) return false;
+    await hc(["keys", lost.terminal, "ctrl+c"]);
+    const r = await hc(["send", lost.terminal, resumeCommand(lost.session)]);
+    return r.code === 0;
+  } catch {
+    return false;
+  }
 }
