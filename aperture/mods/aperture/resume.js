@@ -34,7 +34,7 @@ export async function shellIdle(terminal) {
 export async function resumeSession(lost) {
   try {
     if (!validSession(lost?.session) || !(await shellIdle(lost.terminal))) return false;
-    await hc(["keys", lost.terminal, "ctrl+c"]);
+    if ((await hc(["keys", lost.terminal, "ctrl+c"])).code !== 0) return false; // the line may not be clear
     const r = await hc(["send", lost.terminal, resumeCommand(lost.session)]);
     return r.code === 0;
   } catch {

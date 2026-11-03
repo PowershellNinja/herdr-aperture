@@ -166,8 +166,10 @@ aperture.claude=<session-id>`). Outside a Herdr terminal it does nothing,
 and it never fails a Claude session. It only covers sessions started after
 it was added.
 
-Limits: a script waiting for input (`Read-Host`, `read`) runs no child
-process, so its shell looks idle; check the pane before clicking. A
+Limits: commands that run inside the shell itself (a PowerShell cmdlet such
+as `Copy-Item`, a script waiting at `Read-Host`) start no child process, so
+the shell looks idle. Resume first presses Ctrl+C to clear the prompt line,
+which would interrupt such a command: check the pane before clicking. A
 `claude -p` run inside a session overwrites the session's mark until it ends.
 
 ## Optional extras
