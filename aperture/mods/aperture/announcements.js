@@ -11,11 +11,11 @@
 import { div } from "gpui-kit";
 import { h_flex } from "gpui-base";
 import { agents, panes, terminals, shared, setShared, hc, nextCommand, openOverlay } from "herdr";
-import { C, SIGN, two, icon, label, sfx, subjectName, stopPress } from "./kit.js";
+import { C, SIGN, two, icon, label, sfx, stopPress } from "./kit.js";
 import { snapshot, detect, classifyDeparture, announce, wantsCake } from "./events.js";
 import { sessionName } from "./names.js";
 import { openRecords, LOG_KEY } from "./records.js";
-import { openBoot } from "./pane.js";
+import { openBoot, bootName } from "./pane.js";
 import { LINES } from "./lexicon.js";
 import { prefs, PREFS_KEY } from "./prefs.js";
 import { openFacilitySettings } from "./settings.js";
@@ -140,7 +140,7 @@ export default class Announcements {
     if (c === "settings") return openFacilitySettings();
     if (c === "boot") {
       const p = panes().find((x) => x.focused);
-      if (p) openBoot(p.pane, p.terminal, subjectName(p));
+      if (p) openBoot(p.pane, p.terminal, bootName(p));
       return;
     }
     if (c === "cake") {
