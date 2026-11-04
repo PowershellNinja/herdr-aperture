@@ -13,6 +13,7 @@ import { resumeSession, LOST_KEY } from "./resume.js";
 import { record, LOST_SEEN_KEY } from "./announcements.js";
 import { announce, fill } from "./events.js";
 import { LINES, RESUME_BUSY } from "./lexicon.js";
+import { paneName } from "./names.js";
 
 function folder(cwd) {
   if (!cwd) return "";
@@ -20,6 +21,9 @@ function folder(cwd) {
   if (cwd === h) return "~";
   return cwd.startsWith(h) ? "~" + cwd.slice(h.length) : cwd;
 }
+
+/** Who the Boot Protocol names: the session (or a title a program set), else the program. */
+export const bootName = (p) => paneName(p) ?? subjectName(p);
 
 export function openBoot(pane, terminal, name) {
   openOverlay({ mod: "aperture", kind: "dialog", modal: true, frame: "none", width: 460, height: 300,
@@ -70,7 +74,7 @@ export default class PaneHeader {
       .hover((s) => s.bg(C.orange).border_color(C.orange).text_color(C.ink))
       .tooltip(p.terminal ? "Administer Boot: end this subject's test" : "Close this panel")
       .on_mouse_down("left", stopPress)
-      .on_click((_e, cx) => { cx.stop_propagation(); openBoot(pane, p.terminal, name); })
+      .on_click((_e, cx) => { cx.stop_propagation(); openBoot(pane, p.terminal, bootName(p)); })
       .child(div().font_family(SIGN).font_weight(700).text_size(11.5).child("BOOT"));
 
     return h_flex().id(`head-${pane}`).size_full().pl(10).pr(4).gap(8).items_center()
