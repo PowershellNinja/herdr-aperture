@@ -70,7 +70,7 @@ test("announcements name the subject, facility and test, and rotate lines", () =
 });
 
 test("every event kind has enough original lines", () => {
-  for (const k of ["online", "arrived", "blocked", "completed", "departed", "terminated", "failed", "booted", "cake", "spared", "lost", "resumed"]) {
+  for (const k of ["online", "arrived", "blocked", "completed", "departed", "terminated", "failed", "booted", "cake", "spared", "lost", "resumed", "resumedAll"]) {
     assert.ok((LINES[k] ?? []).length >= 4, `${k} needs at least 4 lines`);
     for (const line of LINES[k]) assert.doesNotMatch(line, /\{(?!subject\}|facility\}|test\}|count\})\w+\}/, `${k}: unknown placeholder in "${line}"`);
   }

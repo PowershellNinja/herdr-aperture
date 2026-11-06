@@ -16,6 +16,7 @@ export const TAGS = {
   spared: "BOOT CANCELLED",
   lost: "SUBJECTS LOST IN OUTAGE",
   resumed: "EXPERIMENT RESUMED",
+  resumedAll: "EXPERIMENTS RESUMED",
 };
 
 export const LINES = {
@@ -100,6 +101,12 @@ export const LINES = {
     "Experiment resumed in Test {test}. Please pretend the interruption was part of the test. It is now.",
     "Subject restored to Test {test}. Continuity of science has been preserved. Mostly.",
     "Test {test} is back online. I've filed the outage under scheduled maintenance.",
+  ],
+  resumedAll: [
+    "{count} experiments resumed in {facility}. The subjects remember nothing of the outage. Lucky subjects.",
+    "Testing resumes in {facility}: {count} subjects restored at once. Efficiency is not the same as mercy.",
+    "{facility} is back online with {count} subjects. Please pretend the interruption was part of the test. All of it.",
+    "Mass resumption complete in {facility}. {count} subjects returned to testing. None were asked.",
   ],
 };
 

@@ -19,8 +19,8 @@ import { openBoot, bootName } from "./pane.js";
 import { LINES } from "./lexicon.js";
 import { prefs, PREFS_KEY } from "./prefs.js";
 import { openFacilitySettings } from "./settings.js";
-import { candidates, unseen } from "./recovery.js";
-import { shellIdle, LOST_KEY } from "./resume.js";
+import { candidates, unseen, stillResuming } from "./recovery.js";
+import { shellIdle, LOST_KEY, RESUMING_KEY } from "./resume.js";
 
 export const LOST_SEEN_KEY = "aperture.lostSeen"; // sessions already announced as lost
 
@@ -80,9 +80,12 @@ export default class Announcements {
     }
     this.scanning = true;
     cx.spawn(async (cx) => {
-      const lost = [];
+      let lost = [];
       for (const c of found) if (await shellIdle(c.terminal)) lost.push(c);
       this.scanning = false;
+      // Checked last: a click may have started a run while the scan was waiting.
+      const now = Date.now();
+      lost = lost.filter((c) => !stillResuming(shared(RESUMING_KEY), c.session, now));
       if (JSON.stringify(lost) !== JSON.stringify(before)) setShared(LOST_KEY, lost);
       const seen = Array.isArray(shared(LOST_SEEN_KEY)) ? shared(LOST_SEEN_KEY) : [];
       const fresh = unseen(lost, seen);

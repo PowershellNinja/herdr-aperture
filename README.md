@@ -142,6 +142,8 @@ After such an outage:
 - the pane's observation feed shows **RESUME EXPERIMENT**, which types
   `claude --resume <session-id>` into that shell;
 - its test chip carries a small resume marker;
+- its facility in the sidebar shows **RESUME ALL EXPERIMENTS**, which does the
+  same for every session lost in that facility, one after the other;
 - GLaDOS announces how many subjects were lost.
 
 Nothing is resumed on its own. The button only appears, and only types,
@@ -169,7 +171,8 @@ it was added.
 Limits: commands that run inside the shell itself (a PowerShell cmdlet such
 as `Copy-Item`, a script waiting at `Read-Host`) start no child process, so
 the shell looks idle. Resume first presses Ctrl+C to clear the prompt line,
-which would interrupt such a command: check the pane before clicking. A
+which would interrupt such a command: check the pane before clicking, and
+every pane of the facility before Resume All. A
 `claude -p` run inside a session overwrites the session's mark until it ends.
 
 ## Optional extras
