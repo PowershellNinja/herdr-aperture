@@ -123,8 +123,10 @@ consoles.
   it has a valid label, is live, local, in a pane, not in `agents()`, and its
   shell has no child process (`hc get` pid, then `Get-CimInstance
   Win32_Process` on Windows, `pgrep -P` elsewhere). Shared `aperture.lost`
-  feeds the pane header's orange pulsing `RESUME EXPERIMENT` and a resume
-  icon on the test chip; new ones get one `SUBJECTS LOST IN OUTAGE` line
+  feeds the pane header's orange pulsing `RESUME EXPERIMENT`, a resume icon on
+  the test chip, and an orange `RESUME ALL EXPERIMENTS · nn` strip under a
+  facility with lost sessions (each session once, resumed one after the other,
+  one `EXPERIMENTS RESUMED` line for several); new ones get one `SUBJECTS LOST IN OUTAGE` line
   (`aperture.lostSeen`). The button re-checks idleness, then `hc send <t>
   "claude --resume <id>"`, logs `EXPERIMENT RESUMED` (or `RESUME REFUSED`).
   Nothing resumes on its own.

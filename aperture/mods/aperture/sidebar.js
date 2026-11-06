@@ -1,6 +1,7 @@
-// The sidebar: Testing Facilities (spaces) as chamber signs, Test Subjects
-// (agents) with their test status, and the GLaDOS monitor with the latest
-// Facility Announcement and a way into the Observation Records.
+// The sidebar: Testing Facilities (spaces) as chamber signs, with RESUME ALL
+// EXPERIMENTS under one that lost Claude sessions, Test Subjects (agents) with
+// their test status, and the GLaDOS monitor with the latest Facility
+// Announcement and a way into the Observation Records.
 
 import { div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
@@ -10,6 +11,8 @@ import {
 } from "./kit.js";
 import { openRecords, LOG_KEY } from "./records.js";
 import { sessionName } from "./names.js";
+import { lostIn } from "./recovery.js";
+import { resumeExperiments, LOST_KEY } from "./resume.js";
 
 const IDLE_LINE = "All test subjects are accounted for. That is not the same as all test subjects being useful.";
 
@@ -31,7 +34,8 @@ export default class Sidebar {
     const facility = (s) => {
       const st = s.status;
       const tests = s.tabs.length;
-      return h_flex().id(`fac-${s.id}`).w_full().h(48).flex_none().pr(12).gap(10).items_center().cursor_pointer()
+      const lost = lostIn(shared(LOST_KEY), s);
+      const sign = h_flex().id(`fac-${s.id}`).w_full().h(48).flex_none().pr(12).gap(10).items_center().cursor_pointer()
         .bg(s.active ? "#ffffff" : C.panel).hover((x) => x.bg(s.active ? "#ffffff" : C.panel2))
         .border_b(1).border_color(C.panel2)
         .on_click(() => run("space.select", { id: s.id }))
@@ -47,6 +51,15 @@ export default class Sidebar {
             st === "blocked" ? C.orange : C.faint, 10.5).truncate()))
         .when(Boolean(st && st !== "idle"), (el) => el.child(div().w(8).h(8).rounded(4).flex_none().bg(STATUS_COLOR[st])
           .when(st === "blocked", (d) => d.loop("opacity", { from: 0.3, to: 1, period: 800 }))));
+      if (!lost.length) return sign;
+      return v_flex().w_full().flex_none().child(sign)
+        .child(h_flex().id(`resume-all-${s.id}`).w_full().h(26).flex_none().px(14).gap(7).items_center().cursor_pointer()
+          .bg(C.orange).text_color(C.ink).hover((x) => x.opacity(0.85))
+          .tooltip(`Resume the ${lost.length === 1 ? "Claude session" : `${lost.length} Claude sessions`} lost in ${s.name}, each in its own idle shell`)
+          .on_click((_e, cx) => { cx.spawn(() => resumeExperiments(lost)); })
+          .child(icon("resume", 10, C.ink))
+          .child(div().flex_1().font_family(SIGN).font_weight(700).text_size(11.5).child("RESUME ALL EXPERIMENTS"))
+          .child(div().font_family(SIGN).font_weight(700).text_size(11.5).child(two(lost.length))));
     };
 
     const subject = (a) => {

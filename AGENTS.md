@@ -31,6 +31,10 @@ An Aperture Science / GLaDOS layout for the Herdr desktop app.
   home. Never touch `settings.json`, `keys.json` or Herdr's shipped
   layouts and mods.
 
+The resume path is tested through its real modules on a pretend Herdr
+(`test/stubs/`): the Resume All review found the pure checks green with the
+wiring broken.
+
 ## Gate (all green before a commit)
 ```sh
 npm test                                   # node --test on the pure logic
